@@ -1,4 +1,4 @@
-import { SearchRequest, ViewRequest } from "./types";
+import { RelatedRequest, SearchRequest, ViewRequest } from "./types";
 
 export const createSearchPrompt = ({ term, type } : SearchRequest) => {
     const lines : string[] = [
@@ -16,6 +16,12 @@ export const createSearchPrompt = ({ term, type } : SearchRequest) => {
 
     return lines.join('\n');
 };
+
+export const createRelatedPrompt = ({ title } : RelatedRequest) => `Welcome to the library of everything. Here contains all texts ever written.
+You are currently viewing "${title}"
+
+Related Texts (as a json array of text titles):
+[ "`;
 
 export const createViewPrompt = ({ title, type } : ViewRequest) => {
     const lines : string[] = [

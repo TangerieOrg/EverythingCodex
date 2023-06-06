@@ -1,9 +1,18 @@
 import { createViewPrompt } from "@modules/Library/prompts";
-import { makeSearchStream } from "@modules/Library/search";
+import { makeRelatedStream, makeSearchStream } from "@modules/Library/streamed";
 import { createCompletionStream } from "@modules/OpenAI";
 import express from "express";
 
 const GPTRoutes = express.Router();
+
+/*
+curl -N --location --request POST 'localhost:8080/search' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "term": "Joe Biden",
+    "type": "Fiction"
+}'
+*/
 
 GPTRoutes.post('/search', async (req, res) => {
     res.statusCode = 200;
@@ -11,6 +20,28 @@ GPTRoutes.post('/search', async (req, res) => {
     res.setHeader('Transfer-Encoding', 'chunked');
     
     const emitter = await makeSearchStream(req.body);
+
+    emitter.on('item', item => {
+        res.write(item + '\n');
+    });
+
+    emitter.on('end', () => res.end());
+})
+
+/*
+curl -N --location --request POST 'localhost:8080/related' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "title": "Joe Biden and the Race for the White House"
+}'
+*/
+
+GPTRoutes.post('/related', async (req, res) => {
+    res.statusCode = 200;
+    res.setHeader('Content-type', 'text/plain');
+    res.setHeader('Transfer-Encoding', 'chunked');
+    
+    const emitter = await makeRelatedStream(req.body);
 
     emitter.on('item', item => {
         res.write(item + '\n');

@@ -9,3 +9,7 @@ export interface SearchRequest extends Partial<TextMetadata> {
 export interface ViewRequest extends Partial<TextMetadata> {
     title : string;
 }
+
+export interface RelatedRequest extends Partial<TextMetadata> {
+    title : string;
+}
