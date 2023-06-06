@@ -16,8 +16,9 @@ curl -N --location --request POST 'localhost:8080/search' \
 
 GPTRoutes.post('/search', async (req, res) => {
     res.statusCode = 200;
-    res.setHeader('Content-type', 'text/plain');
+    res.setHeader('Content-type', 'text/event-stream');
     res.setHeader('Transfer-Encoding', 'chunked');
+    res.setHeader('X-Accel-Buffering', 'no');
     
     const emitter = await makeSearchStream(req.body);
 
@@ -38,8 +39,9 @@ curl -N --location --request POST 'localhost:8080/related' \
 
 GPTRoutes.post('/related', async (req, res) => {
     res.statusCode = 200;
-    res.setHeader('Content-type', 'text/plain');
+    res.setHeader('Content-type', 'text/event-stream');
     res.setHeader('Transfer-Encoding', 'chunked');
+    res.setHeader('X-Accel-Buffering', 'no');
     
     const emitter = await makeRelatedStream(req.body);
 
@@ -61,8 +63,9 @@ curl -N --location --request POST 'localhost:8080/view' \
 
 GPTRoutes.post('/view', async (req, res) => {
     res.statusCode = 200;
-    res.setHeader('Content-type', 'text/plain');
+    res.setHeader('Content-type', 'text/event-stream');
     res.setHeader('Transfer-Encoding', 'chunked');
+    res.setHeader('X-Accel-Buffering', 'no');
 
     const prompt = createViewPrompt(req.body);
 

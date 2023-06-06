@@ -12,6 +12,13 @@ curl -N --location --request POST 'localhost:8080/fake/search' \
     "term": "Joe Biden",
     "type": "Fiction"
 }'
+
+curl -N --location --request POST 'https://tangerie.xyz/codex/api/search' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "term": "Joe Biden",
+    "type": "Fiction"
+}'
 */
 
 const sleep = (ms : number) => {
@@ -33,8 +40,9 @@ const EXAMPLE_SEARCH_RESULTS = [
 
 FakeGPTRoutes.post('/search', async (req, res) => {
     res.statusCode = 200;
-    res.setHeader('Content-type', 'text/plain');
+    res.setHeader('Content-type', 'text/event-stream');
     res.setHeader('Transfer-Encoding', 'chunked');
+    res.setHeader('X-Accel-Buffering', 'no');
     
     for(const item of EXAMPLE_SEARCH_RESULTS) {
         await sleep(100);
@@ -62,9 +70,10 @@ const EXAMPLE_RELATED_RESULTS = [
 
 FakeGPTRoutes.post('/related', async (req, res) => {
     res.statusCode = 200;
-    res.setHeader('Content-type', 'text/plain');
+    res.setHeader('Content-type', 'text/event-stream');
     res.setHeader('Transfer-Encoding', 'chunked');
-    
+    res.setHeader('X-Accel-Buffering', 'no');
+
     for(const item of EXAMPLE_RELATED_RESULTS) {
         await sleep(250);
         res.write(item + '\n')
@@ -96,8 +105,9 @@ function randomInteger(min : number, max : number) {
 
 FakeGPTRoutes.post('/view', async (req, res) => {
     res.statusCode = 200;
-    res.setHeader('Content-type', 'text/plain');
+    res.setHeader('Content-type', 'text/event-stream');
     res.setHeader('Transfer-Encoding', 'chunked');
+    res.setHeader('X-Accel-Buffering', 'no');
 
     let i = 0;
     while(i < EXAMPLE_VIEW_PAGE.length) {

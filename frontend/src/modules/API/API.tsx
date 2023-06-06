@@ -1,3 +1,4 @@
+// const API_ROOT: string = "https://tangerie.xyz/codex/api"// process.env.API_ROOT as string;
 const API_ROOT: string = process.env.API_ROOT as string;
 
 export const getUrl = (url: string) => `${API_ROOT}${url}`
