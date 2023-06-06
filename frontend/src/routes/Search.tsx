@@ -45,11 +45,11 @@ export default function SearchRoute() {
             <SearchBanner />
         </div>
         {
-            isSearching && <div class="max-w-2xl mx-auto animate-in fade-in delay-1000">
+            isSearching && <div class="max-w-2xl mx-auto px-8 animate-in fade-in delay-1000">
                 <SearchResults/>
 
                 {
-                    state === "finished" && <div class="w-full flex flex-row justify-center text-center">
+                    state === "finished" && <div class="pt-8 w-full flex flex-row justify-center text-center">
                         <button 
                             class="animate-in fade-in duration-500 mx-auto px-6 py-3 rounded-lg border-2 border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white transition slide-in-from-left-4"
                             onClick={() => makeRequest()}
