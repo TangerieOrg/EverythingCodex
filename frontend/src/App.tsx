@@ -19,5 +19,5 @@ function App() {
     )
 }
 
-// export default withHOCs(App);
+// export default withHOCs(App, APIProvider);
 export default App;

@@ -23,6 +23,11 @@ const EXAMPLE_SEARCH_RESULTS = [
 "Joe Biden: An American Journey",
 "Joe Biden: The Path to the White House",
 "Joe Biden: A Biography",
+"Joe Biden: A Political Biography",
+"Joe Biden: The Life and Career of the 47th President of the United States",
+"Joe Biden: An American Journey",
+"Joe Biden: The Path to the White House",
+"Joe Biden: A Biography",
 "Joe Biden: A Political Biography"
 ]
 
@@ -32,7 +37,7 @@ FakeGPTRoutes.post('/search', async (req, res) => {
     res.setHeader('Transfer-Encoding', 'chunked');
     
     for(const item of EXAMPLE_SEARCH_RESULTS) {
-        await sleep(250);
+        await sleep(100);
         res.write(item + '\n')
     }
     res.end();

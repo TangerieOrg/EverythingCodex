@@ -1,12 +1,11 @@
-
 import { useMemo } from 'preact/hooks';
 import { TypeAnimation } from 'react-type-animation';
 import SearchBar from './SearchBar';
 
 const WORDS = [
-    "for Everything",
-    "for Anything",
-    "Infinity"
+    "Search for Everything",
+    "Search for Anything",
+    "Explore Infinity"
 ];
 
 export default function SearchBanner() {
@@ -22,7 +21,7 @@ export default function SearchBanner() {
 
     return <>
         <h1 class="text-center text-6xl md:text-6xl mb-8 font-extralight">
-            Search <TypeAnimation sequence={sequence} speed={40} repeat={Infinity}></TypeAnimation>
+            <TypeAnimation sequence={sequence} speed={40} repeat={Infinity} />
         </h1>
         <div class="mx-auto max-w-2xl w-full">
             <SearchBar/>

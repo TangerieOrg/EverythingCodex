@@ -13,7 +13,8 @@
         "lib": [
             "DOM",
             "ESNext",
-            "DOM.Iterable"
+            "DOM.Iterable",
+            "esnext.asynciterable"
         ], /* Specify a set of bundled library declaration files that describe the target runtime environment. */
         "jsx": "react-jsx", /* Specify what JSX code is generated. */
         "experimentalDecorators": true, /* Enable experimental support for TC39 stage 2 draft decorators. */
