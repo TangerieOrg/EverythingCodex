@@ -4,57 +4,54 @@ import { getUrl, createResponseReader } from "./API";
 
 type LoadingState = "ready" | "loading" | "finished";
 
-export interface SearchResultsStore {
-    results : string[],
-    state: LoadingState,
+export interface ViewPageResultsStore {
+    text: string;
+    state: LoadingState;
     actions: {
         reset() : void;
-        add(...items : string[]) : void;
+        append(data : string) : void;
         setState(s : LoadingState) : void;
     }
 }
 
-export const useSearchResultsStore = createStore<SearchResultsStore>((get, set) => ({
-    results: [],
+export const useViewPageResultsStore = createStore<ViewPageResultsStore>((get, set) => ({
+    text: "",
     state: "ready",
     actions: {
         reset: () => set(store => ({
             ...store,
-            results: [],
-            state: "ready"
+            state: "ready",
+            text: ""
         })),
-        add: (...items : string[]) => set(store => ({
+        append: (data : string) => set(store => ({
             ...store,
-            results: [...store.results, ...items]
+            text: store.text + data
         })),
         setState: (s : LoadingState) => set(store => ({
             ...store,
             state: s
         }))
     }
-}));
+}))
 
-export const useSearchRequest = (search : string) => {
-    const isSearching = search.length > 0;
-    const { actions } = useSearchResultsStore();
+export const useViewPageRequest = (title : string) => {
+    const { actions } = useViewPageResultsStore();
 
     return useCallback(() => {
         actions.reset();
-        if (!isSearching) return;
-
         actions.setState("loading");
 
-        fetch(getUrl("/search"), {
+        fetch(getUrl("/view"), {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                term: search
+                title
             })
         }).then(createResponseReader(
-            data => actions.add(data),
+            data => actions.append(data),
             () => actions.setState("finished")
         ));
-    }, [search]);
+    }, [title]);
 }

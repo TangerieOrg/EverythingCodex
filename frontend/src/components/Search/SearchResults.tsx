@@ -18,7 +18,7 @@ export default function SearchResults() {
             results.map((title, i) => (
                 <div key={i} class="pb-4 animate-in fade-in slide-in-from-left-4 duration-500">
                     <Link 
-                        // to={`/view?${toQueryString({ title })}`}
+                        to={`/view?${toQueryString({ title })}`}
                         class="hover:text-purple-700 transition"
                     >
                         {title}

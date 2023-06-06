@@ -5,6 +5,13 @@ import express from "express";
 
 const GPTRoutes = express.Router();
 
+GPTRoutes.use((req, res, next) => {
+    res.setHeader('Content-type', 'text/event-stream');
+    res.setHeader('Transfer-Encoding', 'chunked');
+    res.setHeader('X-Accel-Buffering', 'no');
+    next();
+})
+
 /*
 curl -N --location --request POST 'localhost:8080/search' \
 --header 'Content-Type: application/json' \
@@ -16,9 +23,6 @@ curl -N --location --request POST 'localhost:8080/search' \
 
 GPTRoutes.post('/search', async (req, res) => {
     res.statusCode = 200;
-    res.setHeader('Content-type', 'text/event-stream');
-    res.setHeader('Transfer-Encoding', 'chunked');
-    res.setHeader('X-Accel-Buffering', 'no');
     
     const emitter = await makeSearchStream(req.body);
 
@@ -68,7 +72,7 @@ GPTRoutes.post('/view', async (req, res) => {
     res.setHeader('X-Accel-Buffering', 'no');
 
     const prompt = createViewPrompt(req.body);
-
+    
     const emitter = await createCompletionStream({
         model: "text-davinci-003",
         prompt,

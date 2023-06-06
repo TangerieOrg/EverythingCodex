@@ -10,7 +10,8 @@ module.exports = {
         require("@tailwindcss/forms")({
             strategy: 'class'
         }),
-        require("tailwindcss-animate")
+        require("tailwindcss-animate"),
+        require('@tailwindcss/typography')
     ],
     darkMode: "class"
 }
