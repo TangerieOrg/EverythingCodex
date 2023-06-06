@@ -1,5 +1,5 @@
 import express from "express";
-import { OpenAI, createCompletionStream } from "../modules/openai";
+import { OpenAI, createCompletionStream } from "@modules/OpenAI";
 
 const TestRoutes = express.Router();
 

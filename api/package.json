@@ -6,7 +6,7 @@
     "scripts": {
         "start": "node .",
         "build": "tsc -p .",
-        "dev": " EXPRESS_PORT=8080 nodemon src/index.ts",
+        "dev": " EXPRESS_PORT=8080 nodemon",
         "clean": "rimraf dist"
     },
     "keywords": [],
@@ -28,10 +28,18 @@
         "process": "^0.11.10",
         "rimraf": "^3.0.2",
         "ts-node": "^10.9.1",
+        "tsconfig-paths": "^4.2.0",
         "typescript": "^4.8.3"
     },
     "devDependencies": {
         "@types/cors": "^2.8.13",
         "@types/express-requests-logger": "^3.0.1"
+    },
+    "nodemonConfig": {
+        "watch": [
+            "src"
+        ],
+        "exec": "node -r tsconfig-paths/register -r ts-node/register ./src/index.ts",
+        "ext": "ts,js"
     }
 }
