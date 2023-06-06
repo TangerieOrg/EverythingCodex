@@ -1,0 +1,35 @@
+name: Production Build
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-api:
+    uses: ./.github/workflows/docker-build-push.yml
+    with:
+      image_name: everything-codex-api
+      registry_name: docker.tangerie.xyz
+      ref: main
+      path: api
+    secrets: inherit
+
+  build-web:
+      uses: ./.github/workflows/docker-build-push.yml
+      with:
+        image_name: everything-codex-web
+        registry_name: docker.tangerie.xyz
+        ref: main
+        path: web
+      secrets: inherit
+    
+  deploy:
+    uses: ./.github/workflows/docker-deploy.yml
+    needs: 
+      - build-api
+      - build-web
+    with:
+      image_name: everything-codex
+      registry_name: docker.tangerie.xyz
+    secrets: inherit
