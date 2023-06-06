@@ -4,7 +4,11 @@ if (process.env.NODE_ENV === 'development') {
     require("preact/debug");
 }
 
+import { BrowserRouter } from "react-router-dom";
 import { render } from "preact";
 import App from "./App";
 
-render(<App />, document.getElementById("root")!);
+render(<BrowserRouter>
+    <App />
+</BrowserRouter>
+, document.getElementById("root")!);
