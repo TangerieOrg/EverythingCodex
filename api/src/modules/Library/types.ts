@@ -1,4 +1,11 @@
-export interface SearchRequest {
+export interface TextMetadata {
+    type : string;
+}
+
+export interface SearchRequest extends Partial<TextMetadata> {
     term : string;
-    type?: string;
+}
+
+export interface ViewRequest extends Partial<TextMetadata> {
+    title : string;
 }

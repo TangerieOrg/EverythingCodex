@@ -1,4 +1,4 @@
-import { SearchRequest } from "./types";
+import { SearchRequest, ViewRequest } from "./types";
 
 export const createSearchPrompt = ({ term, type } : SearchRequest) => {
     const lines : string[] = [
@@ -16,3 +16,22 @@ export const createSearchPrompt = ({ term, type } : SearchRequest) => {
 
     return lines.join('\n');
 };
+
+export const createViewPrompt = ({ title, type } : ViewRequest) => {
+    const lines : string[] = [
+        "Welcome to the library of everything. Here contains all texts ever written.\n",
+        `You are currently viewing "${title}"\n`,
+        "The content will start with the title of the text using markdown for any required formatting.\n",
+        "Text Details:",
+        `Title: ${title}`
+    ];
+
+    if(type) lines.push(`Type: ${type}`);
+
+    lines.push(
+        "\n---\n",
+        `# ${title}`
+    )
+
+    return lines.join('\n');
+}
