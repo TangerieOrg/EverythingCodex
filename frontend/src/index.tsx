@@ -8,7 +8,8 @@ import { BrowserRouter } from "react-router-dom";
 import { render } from "preact";
 import App from "./App";
 
-render(<BrowserRouter>
+
+render(<BrowserRouter basename={process.env.NODE_ENV === "production" ? "/codex" : undefined}>
     <App />
 </BrowserRouter>
 , document.getElementById("root")!);

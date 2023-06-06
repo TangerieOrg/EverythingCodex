@@ -19,7 +19,7 @@ RUN npm i
 
 COPY . .
 
-RUN npm run build
+RUN npm run build-prod
 
 FROM node:18.3.0
 
