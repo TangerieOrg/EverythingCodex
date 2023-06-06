@@ -6,6 +6,7 @@ import { useViewPageRequest, useViewPageResultsStore } from "@modules/API/ViewPa
 import { useQueryParameter } from "@modules/Util/Query";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import ReactMarkdown from 'react-markdown'
+import { Link } from "react-router-dom";
 
 export default function ViewRoute() {
     const title = useQueryParameter("title", "");
@@ -25,10 +26,10 @@ export default function ViewRoute() {
 
     return <div class="min-h-screen w-screen">
         <div class="max-w-3xl mx-auto px-8 py-12">
-            <a href="/" className="text-lg hover:text-purple-700 transition mb-6 block group">
+            <Link to="/" className="text-lg hover:text-purple-700 transition mb-6 block group">
                 <FontAwesomeIcon icon={solid("arrow-left")} className="pr-2 group-hover:-translate-x-0.5 transition" />
                 Return to Search
-            </a>
+            </Link>
             <h1 class="text-3xl font-medium mb-8">{title}</h1>
 
             {
