@@ -76,7 +76,7 @@ FakeGPTRoutes.post('/related', async (req, res) => {
     res.statusCode = 200;
 
     for(const item of EXAMPLE_RELATED_RESULTS) {
-        await sleep(250);
+        await sleep(100);
         res.write(item + '\n')
     }
     res.end();
@@ -111,7 +111,7 @@ FakeGPTRoutes.post('/view', async (req, res) => {
 
     let i = 0;
     while(i < EXAMPLE_VIEW_PAGE.length) {
-        await sleep(100)
+        await sleep(10)
         const l = randomInteger(15, 25);
         res.write(EXAMPLE_VIEW_PAGE.slice(
             i, i + l

@@ -18,7 +18,8 @@ export const makeSearchStream = async (data : SearchRequest) => {
         max_tokens: 100,
         top_p: 1,
         frequency_penalty: 0,
-        presence_penalty: 0
+        presence_penalty: 0,
+        stop: "]"
     });
 
     const searchEmitter = new EventEmitter<SearchEventMap>();
@@ -58,7 +59,8 @@ export const makeRelatedStream = async (data : RelatedRequest) => {
         max_tokens: 100,
         top_p: 1,
         frequency_penalty: 0,
-        presence_penalty: 0
+        presence_penalty: 0,
+        stop: "]"
     });
 
     const searchEmitter = new EventEmitter<SearchEventMap>();

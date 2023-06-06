@@ -1,7 +1,9 @@
 import { JSX } from "preact";
 
 const styles = {
-    Purple: "border-purple-600 text-purple-600 hover:bg-purple-600"
+    Purple: "border-purple-600 text-purple-600 hover:bg-purple-600",
+    Green: "border-green-600 text-green-600 hover:bg-green-600",
+    Blue: "border-blue-600 text-blue-600 hover:bg-blue-600",
 }
 
 interface Props extends ChildrenProps {

@@ -1,18 +1,27 @@
-import { useSearchResultsStore } from "@modules/API/Search";
-import { toQueryString, useQueryParameter } from "@modules/Util/Query";
+import { useRelatedRequest, useRelatedResultsStore } from "@modules/API/Related";
+import { toQueryString } from "@modules/Util/Query";
+import { useEffect } from "preact/hooks";
 import { Link } from "react-router-dom";
 
+interface Props {
+    title: string;
+}
 
-export default function SearchResults() {
-    const search = useQueryParameter("q", "");
-    const { results, state } = useSearchResultsStore();
+export default function RelatedTexts({ title }: Props) {
+    const { results, state } = useRelatedResultsStore();
 
-    return <div class="flex flex-col w-full text-lg">
+    const makeRequest = useRelatedRequest(title);
+
+    useEffect(() => {
+        makeRequest();
+    }, [title])
+
+    return <div>
         <h1 class="text-2xl font-light mb-8 -ml-4">
             {
                 state === "loading" ? "Loading " : "Found "
-            } 
-            {results.length} results for "{search}"
+            }
+            {results.length} Related Texts
         </h1>
         {
             results.map((title, i) => (

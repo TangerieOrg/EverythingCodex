@@ -4,7 +4,7 @@ import { getUrl, createResponseReader } from "./API";
 
 type LoadingState = "ready" | "loading" | "finished";
 
-export interface SearchResultsStore {
+export interface RelatedResultsStore {
     results : string[],
     state: LoadingState,
     actions: {
@@ -14,7 +14,7 @@ export interface SearchResultsStore {
     }
 }
 
-export const useSearchResultsStore = createStore<SearchResultsStore>((get, set) => ({
+export const useRelatedResultsStore = createStore<RelatedResultsStore>((get, set) => ({
     results: [],
     state: "ready",
     actions: {
@@ -34,27 +34,25 @@ export const useSearchResultsStore = createStore<SearchResultsStore>((get, set) 
     }
 }));
 
-export const useSearchRequest = (search : string) => {
-    const isSearching = search.length > 0;
-    const { actions } = useSearchResultsStore();
+export const useRelatedRequest = (title : string) => {
+    const { actions } = useRelatedResultsStore();
 
     return useCallback(() => {
         actions.reset();
-        if (!isSearching) return;
 
         actions.setState("loading");
 
-        fetch(getUrl("/search"), {
+        fetch(getUrl("/related"), {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                term: search
+                title
             })
         }).then(createResponseReader(
             data => actions.add(data.trim()),
             () => actions.setState("finished")
         ));
-    }, [search]);
+    }, [title]);
 }
