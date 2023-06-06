@@ -20,11 +20,13 @@ app.use(express.urlencoded({
     extended: true
 }));
 
+const LOG_REQUESTS = true //process.env.NODE_ENV === 'production';
+
 // Logging
-if(process.env.NODE_ENV === 'production') {
+if(LOG_REQUESTS) {
     app.use((req, res, next) => {
         const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
-        console.log(`[${ip}] ${req.url}`);
+        console.log(`[${ip}] ${req.url} (${JSON.stringify(req.body)})`);
         next();
     });
 }
