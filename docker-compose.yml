@@ -5,7 +5,7 @@ services:
             - 8883:80
         image: ${IMAGE_NAME}-api:latest
         deploy:
-            replicas: 1
+            replicas: 4
     frontend:
         ports:
             - 8882:3000
