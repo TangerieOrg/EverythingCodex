@@ -15,20 +15,20 @@ jobs:
       path: api
     secrets: inherit
 
-  build-web:
+  build-frontend:
       uses: ./.github/workflows/docker-build-push.yml
       with:
-        image_name: everything-codex-web
+        image_name: everything-codex-frontend
         registry_name: docker.tangerie.xyz
         ref: main
-        path: web
+        path: frontend
       secrets: inherit
     
   deploy:
     uses: ./.github/workflows/docker-deploy.yml
     needs: 
       - build-api
-      - build-web
+      - build-frontend
     with:
       image_name: everything-codex
       registry_name: docker.tangerie.xyz
