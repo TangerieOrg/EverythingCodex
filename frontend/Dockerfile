@@ -27,6 +27,6 @@ WORKDIR /app
 
 COPY --from=build /app/dist /app
 
-EXPOSE 80
+EXPOSE 3000
 
 ENTRYPOINT ["npx", "serve", "-s", "."]
