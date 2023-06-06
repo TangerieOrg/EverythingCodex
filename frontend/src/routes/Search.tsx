@@ -21,7 +21,7 @@ export default function SearchRoute() {
 
     return <div class="min-h-screen w-screen">
         {/* TODO => Fix for phones */}
-        <div class={`w-full relative transition-all duration-1000 ${isSearching ? "-top-[4.5rem]" : "top-44"}`}>
+        <div class={`w-full relative transition-all duration-1000 ${isSearching ? "md:-top-[4.5rem] -top-[3.5rem]" : "top-44"}`}>
             <SearchBanner />
         </div>
         {

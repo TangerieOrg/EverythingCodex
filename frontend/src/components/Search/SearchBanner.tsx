@@ -12,10 +12,6 @@ const WORDS = [
 export default function SearchBanner() {
     const search = useQueryParameter("q", "");
     const isSearching = search.length > 0;
-    
-    useEffect(() => {
-        console.log("Search", search);
-    }, [search])
 
     const sequence = useMemo(() => {
         const seq: (string | number)[] = [];
