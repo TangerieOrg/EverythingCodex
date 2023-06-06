@@ -1,4 +1,5 @@
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, CreateCompletionRequest, OpenAIApi } from "openai";
+import EventEmitter from "./EventEmitter";
 
 const config = new Configuration({
     apiKey: process.env.OPENAI_KEY
@@ -29,3 +30,41 @@ const createResponse = async (path: string, extraData = "") => {
 }
 
 */
+
+type StreamEventMap = {
+    data: [chunk: string],
+    end: [],
+    error: [message: string, error: any]
+}
+
+export const createCompletionStream = async (options: Omit<CreateCompletionRequest, "n" | "stream">) => {
+    const res = await OpenAI.createCompletion({
+        ...options,
+        stream: true,
+        n: 1
+    }, { responseType: 'stream' });
+    const emitter = new EventEmitter<StreamEventMap>();
+
+    // @ts-ignore
+    res.data.on('data', data => {
+        // @ts-ignore
+        const lines = data.toString().split('\n').filter(line => line.trim() !== '');
+        for (const line of lines) {
+            const message = line.replace(/^data: /, '');
+            if (message === '[DONE]') {
+                emitter.emit('end');
+                return; // Stream finished
+            }
+
+            try {
+                const parsed = JSON.parse(message);
+                emitter.emit('data', parsed.choices[0].text);
+            } catch (error) {
+                emitter.emit('error', message, error);
+                emitter.emit('end');
+            }
+        }
+    });
+
+    return emitter;
+}
