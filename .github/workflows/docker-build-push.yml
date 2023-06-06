@@ -73,4 +73,5 @@ jobs:
           -t ${{inputs.registry_name}}/${{inputs.image_name}}:${{env.CURRENT_TAG}}
           -t ${{inputs.registry_name}}/${{inputs.image_name}}:latest
           --build-arg OPENAI_KEY=${{secrets.OPENAI_KEY}}
+          --build-arg FONTAWESOME_NPM_AUTH_TOKEN=${{secrets.FONT_AWESOME_KEY}}
           ${{inputs.path}}
