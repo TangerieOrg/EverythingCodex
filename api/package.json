@@ -2,7 +2,7 @@
     "name": "everything-codex-api",
     "version": "0.0.1",
     "description": "",
-    "main": "dist/index.js",
+    "main": "dist/src/index.js",
     "scripts": {
         "start": "node .",
         "build": "tsc -p .",
