@@ -1,0 +1,36 @@
+{
+    "name": "everything-codex-api",
+    "version": "0.0.1",
+    "description": "",
+    "main": "dist/index.js",
+    "scripts": {
+        "start": "node .",
+        "build": "tsc -p .",
+        "dev": " EXPRESS_PORT=8080 nodemon src/index.ts",
+        "clean": "rimraf dist"
+    },
+    "keywords": [],
+    "author": "Tangerie <josh.cavill01@gmail.com> (https://github.com/Tangerie)",
+    "license": "ISC",
+    "dependencies": {
+        "@types/express": "^4.17.14",
+        "@types/lodash": "^4.14.185",
+        "@types/node": "^18.7.18",
+        "cheerio": "^1.0.0-rc.12",
+        "cors": "^2.8.5",
+        "crypto": "^1.0.1",
+        "dotenv": "^16.0.2",
+        "express": "^4.18.1",
+        "express-requests-logger": "^4.0.0",
+        "lodash": "^4.17.21",
+        "nodemon": "^2.0.19",
+        "openai": "^3.2.1",
+        "process": "^0.11.10",
+        "rimraf": "^3.0.2",
+        "ts-node": "^10.9.1",
+        "typescript": "^4.8.3"
+    },
+    "devDependencies": {
+        "@types/express-requests-logger": "^3.0.1"
+    }
+}
