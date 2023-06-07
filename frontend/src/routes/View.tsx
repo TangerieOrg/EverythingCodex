@@ -13,10 +13,10 @@ export default function ViewRoute() {
     const title = useQueryParameter("title", "");
     const [isViewingRelated, setIsViewingRelated] = useState(false);
     const { state, text } = useViewPageResultsStore();
-    const { actions: { reset: resetSearch } } = useSearchStore();
+    const { actions: { reset: resetSearch }, value: { category, format } } = useSearchStore();
 
     
-    const makeRequest = useViewPageRequest(title);
+    const makeRequest = useViewPageRequest({ title, category, format });
     const regenerate = useCallback(() => {
         setIsViewingRelated(false);
         return makeRequest()
@@ -62,7 +62,7 @@ export default function ViewRoute() {
             }
             {
                 isViewingRelated && <div class="w-full mt-8">
-                    <RelatedTexts title={title}/>
+                    <RelatedTexts req={{ title, category, format }}/>
                 </div>
             }
         </div>

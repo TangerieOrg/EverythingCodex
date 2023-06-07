@@ -1,6 +1,7 @@
 import { ImmerStore, createImmerStore, createStore } from "@modules/GlobalStore";
 import { useCallback } from "preact/hooks";
 import { getUrl, createResponseReader } from "./API";
+import { ViewRequest } from "./types";
 
 type LoadingState = "ready" | "loading" | "finished";
 
@@ -42,7 +43,7 @@ export const [useViewPageResultsStore] = createImmerStore<ViewPageResultsStore>(
     }
 }))
 
-export const useViewPageRequest = (title : string) => {
+export const useViewPageRequest = (req : ViewRequest) => {
     const { actions } = useViewPageResultsStore();
 
     return useCallback(() => {
@@ -55,9 +56,7 @@ export const useViewPageRequest = (title : string) => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                title
-            }),
+            body: JSON.stringify(req),
             signal: controller.signal
         }).then(createResponseReader(
             data => actions.append(data),
@@ -68,5 +67,5 @@ export const useViewPageRequest = (title : string) => {
             controller.abort();
             actions.setState("ready");
         }
-    }, [title]);
+    }, [req]);
 }

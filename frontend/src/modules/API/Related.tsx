@@ -1,6 +1,7 @@
 import { ImmerStore, createImmerStore, createStore } from "@modules/GlobalStore";
 import { useCallback } from "preact/hooks";
 import { getUrl, createResponseReader } from "./API";
+import { RelatedRequest } from "./types";
 
 type LoadingState = "ready" | "loading" | "finished";
 
@@ -31,7 +32,7 @@ export const [useRelatedResultsStore] = createImmerStore<RelatedResultsStore>((g
     }
 }));
 
-export const useRelatedRequest = (title : string) => {
+export const useRelatedRequest = (req : RelatedRequest) => {
     const { actions } = useRelatedResultsStore();
 
     return useCallback(() => {
@@ -45,9 +46,7 @@ export const useRelatedRequest = (title : string) => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                title
-            }),
+            body: JSON.stringify(req),
             signal: controller.signal
         }).then(createResponseReader(
             data => actions.add(data.trim()),
@@ -58,5 +57,5 @@ export const useRelatedRequest = (title : string) => {
             controller.abort();
             actions.setState("ready");
         }
-    }, [title]);
+    }, [req]);
 }
