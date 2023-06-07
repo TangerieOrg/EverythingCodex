@@ -14,16 +14,11 @@ export default function SearchBar() {
             const v = inputRef.current!.value;
             if(v.length === 0) navigate("/");
             else navigate(`/search?${toQueryString({q: v})}`)
-            // else {
-            //     const params = new URLSearchParams();
-            //     params.set("q", v);
-            //     navigate(`/search?${params.toString()}`)
-            // }
         }
     }, []);
 
     return <input type="text"
-        class="form-input rounded-lg text-xl w-full focus:ring-purple-600 focus:ring-opacity-50"
+        class="form-input text-xl w-full input-themed"
         defaultValue={search}
         ref={inputRef}
         onKeyDown={onKeyDown}

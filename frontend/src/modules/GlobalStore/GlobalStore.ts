@@ -20,20 +20,7 @@ const createEmitter = <Store extends object>() => {
     }
 }
 
-/**
-import { createStore } from "@modules/GlobalStore";
-
-interface TestStore {
-    value: number,
-    add: () => void
-}
-
-const useTestStore = createStore<TestStore>((get, set) => ({
-    value: 0,
-    add: () => set(store => ({...store, value: store.value + 1}))
-}));
- */
-export const createStore = <Store extends {}>(init : StoreInit<Store>) => {
+export const createRawStore = <Store extends {}>(init : StoreInit<Store>) => {
     const emitter = createEmitter<Store>();
 
     let store : Store;
@@ -54,5 +41,20 @@ export const createStore = <Store extends {}>(init : StoreInit<Store>) => {
         return localStore;
     };
 
-    return useStore;
+    return [useStore, get];
 }
+
+/**
+import { createStore } from "@modules/GlobalStore";
+
+interface TestStore {
+    value: number,
+    add: () => void
+}
+
+const useTestStore = createStore<TestStore>((get, set) => ({
+    value: 0,
+    add: () => set(store => ({...store, value: store.value + 1}))
+}));
+ */
+export const createStore = <Store extends {}>(init : StoreInit<Store>) => createRawStore<Store>(init)[0]

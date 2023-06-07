@@ -1,10 +1,9 @@
 import { useSearchResultsStore } from "@modules/API/Search";
-import { toQueryString, useQueryParameter } from "@modules/Util/Query";
+import { toQueryString } from "@modules/Util/Query";
 import { Link } from "react-router-dom";
 
 
 export default function SearchResults() {
-    const search = useQueryParameter("q", "");
     const { results, state } = useSearchResultsStore();
 
     return <div class="flex flex-col w-full text-lg">
@@ -12,7 +11,7 @@ export default function SearchResults() {
             {
                 state === "loading" ? "Loading " : "Found "
             } 
-            {results.length} results for "{search}"
+            {results.length} results
         </h1>
         {
             results.map((title, i) => (

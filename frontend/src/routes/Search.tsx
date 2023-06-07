@@ -20,12 +20,11 @@ export default function SearchRoute() {
     }, [search]);
 
     return <div class="min-h-screen w-screen">
-        {/* TODO => Fix for phones */}
-        <div class={`w-full relative transition-all duration-1000 ${isSearching ? "md:-top-[4.5rem] -top-[3.5rem]" : "top-44"}`}>
-            <SearchBanner />
+        <div class={`w-full transition-all duration-1000 ${isSearching ? "md:-mt-[4.5rem] -mt-[3.5rem]" : "mt-44"}`}>
+            <SearchBanner/>
         </div>
         {
-            isSearching && <div class="max-w-2xl mx-auto px-8">
+            isSearching && <div class="max-w-2xl mx-auto px-8 mt-8">
                 <SearchResults/>
 
                 {

@@ -1,5 +1,8 @@
+import { AdvancedSearchOptions } from "./Search";
+
 export interface TextMetadata {
-    type : string;
+    format : typeof AdvancedSearchOptions["Format"][number];
+    category? : string;
 }
 
 export interface SearchRequest extends Partial<TextMetadata> {

@@ -4,6 +4,16 @@
 @tailwind base;
 @tailwind components;
 
+@layer components {
+    .input-themed {
+        @apply rounded-lg focus:border-purple-600 focus:ring focus:ring-purple-600 focus:ring-opacity-50;
+
+        &.light {
+            @apply border-gray-300 shadow-sm;
+        }
+    }
+}
+
 @tailwind utilities;
 
 html {
