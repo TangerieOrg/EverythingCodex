@@ -8,7 +8,7 @@
     "build": "parcel build public/index.html",
     "build-prod": "parcel build --public-url './' public/index.html",
     "clean": "rimraf dist .parcel-cache",
-    "postinstall": "rimraf node_modules/react node_modules/react-dom"
+    "postinstall": "rimraf node_modules/react node_modules/@types/react node_modules/react-dom"
   },
   "keywords": [],
   "author": "Tangerie <josh.cavill01@gmail.com> (https://github.com/Tangerie)",
@@ -62,6 +62,7 @@
   "devDependencies": {
     "@parcel/resolver-glob": "^2.8.3",
     "@parcel/transformer-inline-string": "^2.8.3",
+    "@parcel/transformer-less": "^2.8.3",
     "buffer": "^5.7.1",
     "cross-env": "^7.0.3",
     "crypto-browserify": "^3.12.0",
