@@ -1,68 +1,70 @@
-import { createStore } from "@modules/GlobalStore";
-import { useCallback } from "preact/hooks";
+import { ImmerStore, createImmerStore } from "@modules/GlobalStore";
 import { getUrl, createResponseReader } from "./API";
+import { getSearchStore } from "@modules/SearchStore";
 
 type LoadingState = "ready" | "loading" | "finished";
 
-export interface SearchResultsStore {
+export type SearchResultsStore = ImmerStore<{
     results : string[],
     state: LoadingState,
+    controller?: AbortController,
     actions: {
         reset() : void;
         add(...items : string[]) : void;
         setState(s : LoadingState) : void;
+        request() : void;
+        abort() : void;
     }
-}
+}>;
 
-export const useSearchResultsStore = createStore<SearchResultsStore>((get, set) => ({
+export const [useSearchResultsStore] = createImmerStore<SearchResultsStore>((get, set) => ({
     results: [],
     state: "ready",
     actions: {
-        reset: () => set(store => ({
-            ...store,
-            results: [],
-            state: "ready"
-        })),
-        add: (...items : string[]) => set(store => ({
-            ...store,
-            results: [...store.results, ...items]
-        })),
-        setState: (s : LoadingState) => set(store => ({
-            ...store,
-            state: s
-        }))
+        reset: () => set(store => {
+            store.results = [];
+            store.state = "ready";
+            store.controller?.abort();
+            delete store.controller;
+        }),
+        add: (...items) => set(store => {
+            store.results.push(...items);
+        }),
+        setState: (s) => set(store => {
+            store.state = s
+        }),
+        request: () => set(store => {
+            store.controller?.abort();
+            store.controller = new AbortController();
+            store.state = "loading";
+            
+            const searchStore = getSearchStore();
+
+            fetch(getUrl("/search"), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(searchStore.value),
+                signal: store.controller.signal
+            }).then(createResponseReader(
+                data => get().actions.add(data.trim()),
+                () => get().actions.setState("finished")
+            )).catch(err => console.log("[ERR]", err))
+        }),
+        abort: () => set(store => {
+            store.controller?.abort();
+            store.state = "ready";
+            delete store.controller;
+        })
     }
 }));
 
-export const useSearchRequest = (search : string) => {
-    const isSearching = search.length > 0;
-    const { actions } = useSearchResultsStore();
-
-    return useCallback(() => {
-        const controller = new AbortController();
-
-        actions.reset();
-        if (!isSearching) return;
-
-        actions.setState("loading");
-
-        fetch(getUrl("/search"), {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                term: search
-            }),
-            signal: controller.signal
-        }).then(createResponseReader(
-            data => actions.add(data.trim()),
-            () => actions.setState("finished")
-        )).catch(err => console.log("[ERR]", err));
-
-        return () => {
-            controller.abort();
-            actions.setState("ready");
-        }
-    }, [search]);
-}
+export const SearchFormatOptions = [
+    "Article",
+    "Essay",
+    "Poem",
+    "Story",
+    "Scientific Paper",
+    "Guide"
+] as const;

@@ -1,10 +1,11 @@
-import { createStore } from "@modules/GlobalStore";
+import { ImmerStore, createImmerStore, createStore } from "@modules/GlobalStore";
 import { useCallback } from "preact/hooks";
 import { getUrl, createResponseReader } from "./API";
+import { ViewRequest } from "./types";
 
 type LoadingState = "ready" | "loading" | "finished";
 
-export interface ViewPageResultsStore {
+export type ViewPageResultsStore = ImmerStore<{
     text: string;
     state: LoadingState;
     actions: {
@@ -12,7 +13,7 @@ export interface ViewPageResultsStore {
         append(data : string) : void;
         setState(s : LoadingState) : void;
     }
-}
+}>;
 
 const EXAMPLE_VIEW_PAGE = `Joe Biden was a man with a mission: to become the President of the United States of America. He had been in politics for many years and had served as both Senator and Vice President. Now, he was ready to take on the challenge of a lifetime: running for the highest office in the land.
 ## Chapter 1
@@ -25,27 +26,24 @@ The race for the White House was a grueling one. Biden had to battle through a c
 On November 3rd, 2020, Joe Biden was declared the President-elect. He had won the election with a clear
 `
 
-export const useViewPageResultsStore = createStore<ViewPageResultsStore>((get, set) => ({
+export const [useViewPageResultsStore] = createImmerStore<ViewPageResultsStore>((get, set) => ({
     text: "",
     state: "ready",
     actions: {
-        reset: () => set(store => ({
-            ...store,
-            state: "ready",
-            text: ""
-        })),
-        append: (data : string) => set(store => ({
-            ...store,
-            text: store.text + data
-        })),
-        setState: (s : LoadingState) => set(store => ({
-            ...store,
-            state: s
-        }))
+        reset: () => set(store => {
+            store.state = "ready",
+            store.text = ""
+        }),
+        append: (data) => set(store => {
+            store.text += data;
+        }),
+        setState: (s) => set(store => {
+            store.state = s
+        })
     }
 }))
 
-export const useViewPageRequest = (title : string) => {
+export const useViewPageRequest = (req : ViewRequest) => {
     const { actions } = useViewPageResultsStore();
 
     return useCallback(() => {
@@ -58,9 +56,7 @@ export const useViewPageRequest = (title : string) => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                title
-            }),
+            body: JSON.stringify(req),
             signal: controller.signal
         }).then(createResponseReader(
             data => actions.append(data),
@@ -71,5 +67,5 @@ export const useViewPageRequest = (title : string) => {
             controller.abort();
             actions.setState("ready");
         }
-    }, [title]);
+    }, [req]);
 }

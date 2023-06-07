@@ -8,7 +8,7 @@
     "build": "parcel build public/index.html",
     "build-prod": "parcel build --public-url './' public/index.html",
     "clean": "rimraf dist .parcel-cache",
-    "postinstall": "rimraf node_modules/react node_modules/react-dom"
+    "postinstall": "rimraf node_modules/react node_modules/@types/react node_modules/react-dom"
   },
   "keywords": [],
   "author": "Tangerie <josh.cavill01@gmail.com> (https://github.com/Tangerie)",
@@ -40,6 +40,9 @@
     "cross-var": "^1.1.0",
     "cssnano": "^5.1.13",
     "dotenv": "^16.0.2",
+    "flowbite": "^1.6.5",
+    "flowbite-react": "^0.4.7",
+    "immer": "^10.0.2",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "mac-scrollbar": "^0.10.3",
@@ -62,6 +65,7 @@
   "devDependencies": {
     "@parcel/resolver-glob": "^2.8.3",
     "@parcel/transformer-inline-string": "^2.8.3",
+    "@parcel/transformer-less": "^2.8.3",
     "buffer": "^5.7.1",
     "cross-env": "^7.0.3",
     "crypto-browserify": "^3.12.0",

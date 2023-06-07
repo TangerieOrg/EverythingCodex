@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
+import { produce, Draft, Immutable } from "immer";
 
 type StoreGet<Store extends object> = () => Store;
 type StoreSetter<Store extends object> = (s : Store) => Store;
@@ -8,7 +9,12 @@ export type StoreInit<Store extends object> = (get : StoreGet<Store>, set : Stor
 export type StoreOperation<Store extends object> = (store : Store) => Store;
 export type StoreCallback<Store extends object> = (v : Store) => any;
 
-const createEmitter = <Store extends object>() => {
+export interface StoreEmitter<Store extends object> {
+    emit(v : Store): void;
+    subscribe(fn : StoreCallback<Store>): () => boolean;
+}
+
+const createEmitter = <Store extends object>() : StoreEmitter<Store> => {
     const subs = new Map<Symbol, StoreCallback<Store>>();
     return {
         emit: (v : Store) => subs.forEach(fn => fn(v)),
@@ -20,20 +26,9 @@ const createEmitter = <Store extends object>() => {
     }
 }
 
-/**
-import { createStore } from "@modules/GlobalStore";
+type UseStore<Store extends object> = () => Store;
 
-interface TestStore {
-    value: number,
-    add: () => void
-}
-
-const useTestStore = createStore<TestStore>((get, set) => ({
-    value: 0,
-    add: () => set(store => ({...store, value: store.value + 1}))
-}));
- */
-export const createStore = <Store extends {}>(init : StoreInit<Store>) => {
+export const createRawStore = <Store extends {}>(init : StoreInit<Store>) : [useStore : UseStore<Store>, get : StoreGet<Store>, emitter : StoreEmitter<Store>] => {
     const emitter = createEmitter<Store>();
 
     let store : Store;
@@ -54,5 +49,49 @@ export const createStore = <Store extends {}>(init : StoreInit<Store>) => {
         return localStore;
     };
 
-    return useStore;
+    return [useStore, get, emitter];
 }
+
+type ImmerStoreSetter<Store extends object> = (s : Draft<Store>) => void;
+type ImmerStoreSet<Store extends object> = (setter : ImmerStoreSetter<Store>) => void;
+type ImmerStoreInit<Store extends object> = (get : StoreGet<Store>, set : ImmerStoreSet<Store>) => Store;
+type ImmerStoreCreateReturn<S extends object> = [useStore : UseStore<S>, get : StoreGet<S>, emitter : StoreEmitter<S>];
+export type ImmerStore<S extends object> = Immutable<S>;
+
+export const createImmerStore = <Store extends Immutable<object>>(init : ImmerStoreInit<Store>) : ImmerStoreCreateReturn<Store> => {
+    const emitter = createEmitter<Store>();
+
+    let store : Store;
+    const get : StoreGet<Store> = () => store;
+    const set : ImmerStoreSet<Store> = (op) => {
+        store = produce(store, op);
+        emitter.emit(store);
+    };
+
+    store = init(get, set);
+
+    const useStore = () => {
+        const [localStore, setLocalStore] = useState(get());
+
+        useEffect(() => emitter.subscribe(setLocalStore), []);
+
+        return localStore;
+    };
+
+    return [useStore, get, emitter];
+}
+
+/**
+import { createStore } from "@modules/GlobalStore";
+
+interface TestStore {
+    value: number,
+    add: () => void
+}
+
+const useTestStore = createStore<TestStore>((get, set) => ({
+    value: 0,
+    add: () => set(store => ({...store, value: store.value + 1}))
+}));
+ */
+export const createStore = <Store extends {}>(init : StoreInit<Store>) => createRawStore<Store>(init)[0]
