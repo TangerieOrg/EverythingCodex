@@ -49,8 +49,8 @@ FakeGPTRoutes.post('/search', async (req, res) => {
     res.statusCode = 200;
     
     for(const item of EXAMPLE_SEARCH_RESULTS) {
-        await sleep(100);
-        res.write(item + '\n')
+        await sleep(750);
+        res.write(`[${req.body.term}] ` + item + '\n')
     }
     res.end();
 })
@@ -76,8 +76,8 @@ FakeGPTRoutes.post('/related', async (req, res) => {
     res.statusCode = 200;
 
     for(const item of EXAMPLE_RELATED_RESULTS) {
-        await sleep(100);
-        res.write(item + '\n')
+        await sleep(750);
+        res.write(`[${req.body.title}] ` + item + '\n')
     }
     res.end();
 })
@@ -108,6 +108,8 @@ function randomInteger(min : number, max : number) {
 
 FakeGPTRoutes.post('/view', async (req, res) => {
     res.statusCode = 200;
+
+    res.write(`${req.body.title}\n`);
 
     let i = 0;
     while(i < EXAMPLE_VIEW_PAGE.length) {

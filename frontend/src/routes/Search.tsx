@@ -16,7 +16,7 @@ export default function SearchRoute() {
 
     useEffect(() => {
         if (!isSearching) return;
-        makeRequest();
+        return makeRequest();
     }, [search]);
 
     return <div class="min-h-screen w-screen">

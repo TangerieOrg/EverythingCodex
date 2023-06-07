@@ -65,6 +65,9 @@ curl -N --location --request POST 'localhost:8080/view' \
 }'
 */
 
+// RPM = 3,000	
+// TPM = 250,000
+
 GPTRoutes.post('/view', async (req, res) => {
     res.statusCode = 200;
     res.setHeader('Content-type', 'text/event-stream');

@@ -5,7 +5,6 @@ export const getUrl = (url: string) => `${API_ROOT}${url}`
 
 const decoder = new TextDecoder()
 
-
 export function createResponseReader(onChunk: (chunk: string) => any, onFinish?: () => any) {
     return (response: Response) => {
         const reader = response.body!.getReader();

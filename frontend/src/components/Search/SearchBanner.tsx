@@ -25,6 +25,7 @@ export default function SearchBanner() {
 
     return <>
         <h1 class={`text-center text-3xl md:text-6xl mb-8 font-extralight transition ${isSearching ? "opacity-0" : "opacity-100"}`}>
+            {/* @ts-ignore */}
             <TypeAnimation key={isSearching} sequence={isSearching ? ["", 100] : sequence} speed={40} repeat={Infinity} />
         </h1>
         <div class="mx-auto max-w-2xl w-full px-8">

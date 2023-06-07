@@ -1,5 +1,5 @@
 import { createStore } from "@modules/GlobalStore";
-import { useCallback } from "preact/hooks";
+import { useCallback, useMemo } from "preact/hooks";
 import { getUrl, createResponseReader } from "./API";
 
 type LoadingState = "ready" | "loading" | "finished";
@@ -39,6 +39,8 @@ export const useSearchRequest = (search : string) => {
     const { actions } = useSearchResultsStore();
 
     return useCallback(() => {
+        const controller = new AbortController();
+
         actions.reset();
         if (!isSearching) return;
 
@@ -51,10 +53,13 @@ export const useSearchRequest = (search : string) => {
             },
             body: JSON.stringify({
                 term: search
-            })
+            }),
+            signal: controller.signal
         }).then(createResponseReader(
             data => actions.add(data.trim()),
             () => actions.setState("finished")
-        ));
+        )).catch(err => console.log("[ERR]", err));
+
+        return () => controller.abort();
     }, [search]);
 }
