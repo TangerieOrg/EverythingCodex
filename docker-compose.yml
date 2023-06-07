@@ -5,20 +5,19 @@ services:
         volumes:
             - redis-data:/data
             - redis-conf:/usr/local/etc/redis/redis.conf
-        expose:
-            - "6379"
         restart: always
-        networks:
-            - internal
+        # networks:
+        #     - internal
     api:
         ports:
             - 8883:80
         image: ${IMAGE_NAME}-api:latest
         deploy:
             replicas: 4
-        networks:
-            - internal
-            - default
+        restart: always
+        # networks:
+        #     - internal
+        #     - default
         depends_on:
             - redis
     frontend:
@@ -27,8 +26,9 @@ services:
         image: ${IMAGE_NAME}-frontend:latest
         deploy:
             replicas: 1
-        networks:
-            - default
+        restart: always
+        # networks:
+        #     - default
         depends_on:
             - api
     
@@ -36,10 +36,11 @@ volumes:
     redis-data:
     redis-conf:
 
-networks:
-    default:
-        name: default
-        driver: bridge
-    internal:
-        name: internal
-        internal: true
+# networks:
+#     default:
+#         name: default
+#         driver: overlay
+#     internal:
+#         name: internal
+#         internal: true
+#         driver: overlay
