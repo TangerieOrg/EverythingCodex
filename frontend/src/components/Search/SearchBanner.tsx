@@ -4,6 +4,8 @@ import SearchBar from './SearchBar';
 import Expandable from '@components/Expandable';
 import AdvancedSearch from './AdvancedSearch';
 import { useSearchStore } from '@modules/SearchStore';
+import { useSearchResultsStore } from '@modules/API/Search';
+import { useLocation } from 'react-router-dom';
 
 const WORDS = [
     "Search for Everything",
@@ -12,9 +14,11 @@ const WORDS = [
 ];
 
 export default function SearchBanner() {
+    const { pathname } = useLocation();
+    const isSearching = pathname === '/search';
     const [advancedShown, setAdvancedShown] = useState(false);
     const { value } = useSearchStore();
-    const isSearching = value.term !== undefined;
+    const { state } = useSearchResultsStore();
 
     const sequence = useMemo(() => {
         const seq: (string | number)[] = [];

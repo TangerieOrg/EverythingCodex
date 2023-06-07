@@ -1,8 +1,10 @@
 import { SearchFormatOptions } from "@modules/API/Search"
-import { useSearchStore } from "@modules/SearchStore";
+import { getSearchURL, useSearchStore } from "@modules/SearchStore";
+import { useNavigate } from "react-router-dom";
 
 export default function AdvancedSearch() {
     const { actions, value } = useSearchStore();
+    const navigate = useNavigate();
 
     const setKey = <K extends keyof typeof value>(k : K, v : (typeof value)[K] | undefined) => {
         if(v === undefined || v.length === 0) actions.delete(k);
@@ -39,9 +41,12 @@ export default function AdvancedSearch() {
 
         <button 
             class="text-gray-600 mt-2 hover:underline text-left ml-1"
-            onClick={() => actions.reset("term")}
+            onClick={() => {
+                actions.reset();
+                navigate(getSearchURL());
+            }}
         >
-            Clear Filters
+            Reset Search
         </button>
     </div>
 }
