@@ -1,10 +1,10 @@
-import { createStore } from "@modules/GlobalStore";
+import { ImmerStore, createImmerStore, createStore } from "@modules/GlobalStore";
 import { useCallback } from "preact/hooks";
 import { getUrl, createResponseReader } from "./API";
 
 type LoadingState = "ready" | "loading" | "finished";
 
-export interface RelatedResultsStore {
+export type RelatedResultsStore = ImmerStore<{
     results : string[],
     state: LoadingState,
     actions: {
@@ -12,25 +12,22 @@ export interface RelatedResultsStore {
         add(...items : string[]) : void;
         setState(s : LoadingState) : void;
     }
-}
+}>;
 
-export const useRelatedResultsStore = createStore<RelatedResultsStore>((get, set) => ({
+export const [useRelatedResultsStore] = createImmerStore<RelatedResultsStore>((get, set) => ({
     results: [],
     state: "ready",
     actions: {
-        reset: () => set(store => ({
-            ...store,
-            results: [],
-            state: "ready"
-        })),
-        add: (...items : string[]) => set(store => ({
-            ...store,
-            results: [...store.results, ...items]
-        })),
-        setState: (s : LoadingState) => set(store => ({
-            ...store,
-            state: s
-        }))
+        reset: () => set(store => {
+            store.results = [];
+            store.state = "ready"
+        }),
+        add: (...items) => set(store => {
+            store.results.push(...items);
+        }),
+        setState: (s) => set(store => {
+            store.state = s;
+        })
     }
 }));
 

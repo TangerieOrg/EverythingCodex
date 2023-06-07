@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { produce } from "immer";
+import { produce, Draft, Immutable } from "immer";
 
 type StoreGet<Store extends object> = () => Store;
 type StoreSetter<Store extends object> = (s : Store) => Store;
@@ -52,11 +52,13 @@ export const createRawStore = <Store extends {}>(init : StoreInit<Store>) : [use
     return [useStore, get, emitter];
 }
 
-type ImmerStoreSetter<Store extends object> = (s : Store) => void;
+type ImmerStoreSetter<Store extends object> = (s : Draft<Store>) => void;
 type ImmerStoreSet<Store extends object> = (setter : ImmerStoreSetter<Store>) => void;
 type ImmerStoreInit<Store extends object> = (get : StoreGet<Store>, set : ImmerStoreSet<Store>) => Store;
+type ImmerStoreCreateReturn<S extends object> = [useStore : UseStore<S>, get : StoreGet<S>, emitter : StoreEmitter<S>];
+export type ImmerStore<S extends object> = Immutable<S>;
 
-export const createImmerStore = <Store extends {}>(init : ImmerStoreInit<Store>) : [useStore : UseStore<Store>, get : StoreGet<Store>, emitter : StoreEmitter<Store>] => {
+export const createImmerStore = <Store extends Immutable<object>>(init : ImmerStoreInit<Store>) : ImmerStoreCreateReturn<Store> => {
     const emitter = createEmitter<Store>();
 
     let store : Store;

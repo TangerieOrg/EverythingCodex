@@ -1,15 +1,18 @@
 import { SearchRequest } from "./API/types";
-import { createImmerStore } from "./GlobalStore";
+import { ImmerStore, createImmerStore } from "./GlobalStore";
 import { pick } from "lodash";
 import { toQueryString } from "./Util/Query";
 
+type SearchStoreValue = ImmerStore<Partial<SearchRequest>>;
+interface SearchStoreActions {
+    reset(...keysToKeep : (keyof SearchStoreValue)[]): void;
+    set<K extends keyof SearchStoreValue>(key: K, value: SearchStoreValue[K]): void;
+    delete<K extends keyof SearchStoreValue>(key: K): void;
+}
+
 export interface SearchStore {
-    value: Partial<SearchRequest>;
-    actions: {
-        reset(...keysToKeep : (keyof SearchRequest)[]): void;
-        set<K extends keyof SearchRequest>(key: K, value: SearchRequest[K]): void;
-        delete<K extends keyof SearchRequest>(key: K): void;
-    }
+    value: SearchStoreValue;
+    actions: SearchStoreActions;
 }
 
 const getValueFromURL = () : Partial<SearchRequest> => {
@@ -18,7 +21,7 @@ const getValueFromURL = () : Partial<SearchRequest> => {
     return pick(v, ["term", "format", "category"]);
 }
 
-export const [useSearchStore, getSearchStore, searchStoreEmitter] = createImmerStore<SearchStore>((get, set) => ({
+export const [useSearchStore, getSearchStore, searchStoreEmitter] = createImmerStore<ImmerStore<SearchStore>>((get, set) => ({
     value: getValueFromURL(),
     actions: {
         reset: (...keysToKeep) => set(store => {
