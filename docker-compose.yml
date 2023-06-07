@@ -1,15 +1,45 @@
 version: '3'
 services:
+    redis:
+        image: redislabs/redismod
+        volumes:
+            - redis-data:/data
+            - redis-conf:/usr/local/etc/redis/redis.conf
+        expose:
+            - "6379"
+        restart: always
+        networks:
+            - internal
     api:
         ports:
             - 8883:80
         image: ${IMAGE_NAME}-api:latest
         deploy:
             replicas: 4
+        networks:
+            - internal
+            - default
+        depends_on:
+            - redis
     frontend:
         ports:
             - 8882:3000
         image: ${IMAGE_NAME}-frontend:latest
         deploy:
             replicas: 1
-            
+        networks:
+            - default
+        depends_on:
+            - api
+    
+volumes:
+    redis-data:
+    redis-conf:
+
+networks:
+    default:
+        name: default
+        driver: bridge
+    internal:
+        name: internal
+        internal: true
