@@ -8,12 +8,14 @@ export default function SearchBar() {
     const [input, setInput] = useState(value.term ?? "");
     const navigate = useNavigate();
 
-    const onKeyDown = (ev : JSX.TargetedEvent<HTMLInputElement, Event>) => {
-        // @ts-ignore
-        if(ev.key === 'Enter') {
-            if(input.length === 0) actions.delete("term")
-            else actions.set("term", input)
+    const setTerm = (v : string) => {
+        if(v === undefined || v.length === 0) actions.delete("term");
+        else actions.set("term", v)
+    }
 
+    const onKeyDown : JSX.KeyboardEventHandler<HTMLInputElement> = (ev) => {
+        if(ev.key === 'Enter') {
+            setTerm(input)
             navigate(getSearchURL());
         }
     };
@@ -22,8 +24,7 @@ export default function SearchBar() {
         class="form-input text-xl w-full input-themed"
         value={input}
         onKeyDown={onKeyDown}
-        // @ts-ignore
-        onInput={ev => setInput(ev.target!.value.trim()) }
+        onInput={(ev : any) => setInput(ev.target.value.trim()) }
         placeholder="Enter search term..."
     />
 }

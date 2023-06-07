@@ -39,7 +39,7 @@ export default function AdvancedSearch() {
 
         <button 
             class="text-gray-600 mt-2 hover:underline text-left ml-1"
-            onClick={() => actions.reset()}
+            onClick={() => actions.reset("term")}
         >
             Clear Filters
         </button>
