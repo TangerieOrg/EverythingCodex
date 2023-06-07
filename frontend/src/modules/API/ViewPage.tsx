@@ -49,6 +49,7 @@ export const useViewPageRequest = (title : string) => {
     const { actions } = useViewPageResultsStore();
 
     return useCallback(() => {
+        const controller = new AbortController();
         actions.reset();
         actions.setState("loading");
 
@@ -59,10 +60,16 @@ export const useViewPageRequest = (title : string) => {
             },
             body: JSON.stringify({
                 title
-            })
+            }),
+            signal: controller.signal
         }).then(createResponseReader(
             data => actions.append(data),
             () => actions.setState("finished")
         ));
+
+        return () => {
+            controller.abort();
+            actions.setState("ready");
+        }
     }, [title]);
 }

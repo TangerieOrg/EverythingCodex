@@ -1,5 +1,5 @@
 import { createStore } from "@modules/GlobalStore";
-import { useCallback, useMemo } from "preact/hooks";
+import { useCallback } from "preact/hooks";
 import { getUrl, createResponseReader } from "./API";
 
 type LoadingState = "ready" | "loading" | "finished";
@@ -60,6 +60,9 @@ export const useSearchRequest = (search : string) => {
             () => actions.setState("finished")
         )).catch(err => console.log("[ERR]", err));
 
-        return () => controller.abort();
+        return () => {
+            controller.abort();
+            actions.setState("ready");
+        }
     }, [search]);
 }

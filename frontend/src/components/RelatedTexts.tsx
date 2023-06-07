@@ -13,8 +13,9 @@ export default function RelatedTexts({ title }: Props) {
     const makeRequest = useRelatedRequest(title);
 
     useEffect(() => {
-        makeRequest();
-    }, [title])
+        console.log("Making related text search for", title);
+        return makeRequest();
+    }, []);
 
     return <div>
         <h1 class="text-2xl font-light mb-8 -ml-4">

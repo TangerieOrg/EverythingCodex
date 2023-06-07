@@ -113,7 +113,7 @@ FakeGPTRoutes.post('/view', async (req, res) => {
 
     let i = 0;
     while(i < EXAMPLE_VIEW_PAGE.length) {
-        await sleep(10)
+        await sleep(100)
         const l = randomInteger(15, 25);
         res.write(EXAMPLE_VIEW_PAGE.slice(
             i, i + l

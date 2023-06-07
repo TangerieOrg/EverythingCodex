@@ -17,11 +17,11 @@ export default function ViewRoute() {
     const makeRequest = useViewPageRequest(title);
     const regenerate = useCallback(() => {
         setIsViewingRelated(false);
-        makeRequest()
+        return makeRequest()
     }, [title]);
 
     useEffect(() => {
-        regenerate();
+        return regenerate();
     }, [title]);
 
     return <div class="min-h-screen w-screen">
