@@ -67,13 +67,11 @@ export const useSearchRequest = (search : string) => {
     }, [search]);
 }
 
-export const AdvancedSearchOptions = {
-    Format: [
-        "Article",
-        "Blog",
-        "Essay",
-        "Poem",
-        "Story",
-        "Recipe"
-    ] as const
-}
+export const SearchFormatOptions = [
+    "Article",
+    "Essay",
+    "Poem",
+    "Story",
+    "Scientific Paper",
+    "Guide"
+] as const;

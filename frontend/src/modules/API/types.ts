@@ -1,7 +1,7 @@
-import { AdvancedSearchOptions } from "./Search";
+import { SearchFormatOptions } from "./Search";
 
 export interface TextMetadata {
-    format : typeof AdvancedSearchOptions["Format"][number];
+    format : typeof SearchFormatOptions[number];
     category? : string;
 }
 

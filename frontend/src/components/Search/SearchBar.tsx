@@ -1,27 +1,29 @@
-import { toQueryString, useQueryParameter } from "@modules/Util/Query"
-import { useCallback, useEffect, useRef, useState } from "preact/hooks";
+import { useCallback, useState } from "preact/hooks";
 import { JSX } from "preact";
 import { useNavigate } from "react-router-dom";
+import { getSearchURL, useSearchStore } from "@modules/SearchStore";
 
 export default function SearchBar() {
-    const search = useQueryParameter("q", "");
+    const { value, actions } = useSearchStore();
+    const [input, setInput] = useState(value.term ?? "");
     const navigate = useNavigate();
-    const inputRef = useRef<HTMLInputElement | null>(null);
 
-    const onKeyDown = useCallback((ev : JSX.TargetedEvent<HTMLInputElement, Event>) => {
+    const onKeyDown = (ev : JSX.TargetedEvent<HTMLInputElement, Event>) => {
         // @ts-ignore
         if(ev.key === 'Enter') {
-            const v = inputRef.current!.value;
-            if(v.length === 0) navigate("/");
-            else navigate(`/search?${toQueryString({q: v})}`)
+            if(input.length === 0) actions.delete("term")
+            else actions.set("term", input)
+
+            navigate(getSearchURL());
         }
-    }, []);
+    };
 
     return <input type="text"
         class="form-input text-xl w-full input-themed"
-        defaultValue={search}
-        ref={inputRef}
+        value={input}
         onKeyDown={onKeyDown}
+        // @ts-ignore
+        onInput={ev => setInput(ev.target!.value.trim()) }
         placeholder="Enter search term..."
     />
 }

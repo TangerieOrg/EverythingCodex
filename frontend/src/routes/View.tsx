@@ -3,7 +3,7 @@ import StyledButton from "@components/StyledButton";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useViewPageRequest, useViewPageResultsStore } from "@modules/API/ViewPage";
-import { useAdvancedSearchStore } from "@modules/AdvancedSearchStore";
+import { useSearchStore } from "@modules/SearchStore";
 import { useQueryParameter } from "@modules/Util/Query";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import ReactMarkdown from 'react-markdown'
@@ -13,7 +13,7 @@ export default function ViewRoute() {
     const title = useQueryParameter("title", "");
     const [isViewingRelated, setIsViewingRelated] = useState(false);
     const { state, text } = useViewPageResultsStore();
-    const searchStore = useAdvancedSearchStore();
+    const { actions: { reset: resetSearch } } = useSearchStore();
 
     
     const makeRequest = useViewPageRequest(title);
@@ -28,7 +28,7 @@ export default function ViewRoute() {
 
     return <div class="min-h-screen w-screen">
         <div class="max-w-3xl mx-auto px-8 py-12">
-            <Link to="/" className="text-lg hover:text-purple-700 transition mb-6 block group" onClick={() => searchStore.actions.reset()}>
+            <Link to="/" className="text-lg hover:text-purple-700 transition mb-6 block group" onClick={() => resetSearch()}>
                 <FontAwesomeIcon icon={solid("arrow-left")} className="pr-2 group-hover:-translate-x-0.5 transition" />
                 Return to Search
             </Link>

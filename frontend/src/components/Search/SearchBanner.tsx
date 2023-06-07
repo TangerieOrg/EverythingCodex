@@ -1,11 +1,9 @@
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import { TypeAnimation } from 'react-type-animation';
 import SearchBar from './SearchBar';
-import { useQueryParameter } from '@modules/Util/Query';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 import Expandable from '@components/Expandable';
 import AdvancedSearch from './AdvancedSearch';
+import { useSearchStore } from '@modules/SearchStore';
 
 const WORDS = [
     "Search for Everything",
@@ -14,10 +12,9 @@ const WORDS = [
 ];
 
 export default function SearchBanner() {
-    const [advancedShown, setAdvancedShown] = useState(true);
-    const search = useQueryParameter("q", "");
-    const isSearching = search.length > 0;
-    
+    const [advancedShown, setAdvancedShown] = useState(false);
+    const { value } = useSearchStore();
+    const isSearching = value.term !== undefined;
 
     const sequence = useMemo(() => {
         const seq: (string | number)[] = [];

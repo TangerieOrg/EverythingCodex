@@ -1,12 +1,8 @@
-import StyledButton from "@components/StyledButton";
-import { AdvancedSearchOptions } from "@modules/API/Search"
-import { useAdvancedSearchStore } from "@modules/AdvancedSearchStore";
-import { useEffect } from "preact/hooks";
+import { SearchFormatOptions } from "@modules/API/Search"
+import { useSearchStore } from "@modules/SearchStore";
 
 export default function AdvancedSearch() {
-    const { actions, value } = useAdvancedSearchStore();
-
-    console.log(value);
+    const { actions, value } = useSearchStore();
 
     const setKey = <K extends keyof typeof value>(k : K, v : (typeof value)[K] | undefined) => {
         if(v === undefined || v.length === 0) actions.delete(k);
@@ -24,7 +20,7 @@ export default function AdvancedSearch() {
             >
                 <option value="" class="text-black" selected={value.format === undefined}>Any</option>
                 {
-                    AdvancedSearchOptions.Format.map(format => (
+                    SearchFormatOptions.map(format => (
                         <option value={format} class="text-black">{format}</option>
                     ))
                 }
