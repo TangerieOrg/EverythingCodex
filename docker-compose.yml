@@ -5,7 +5,6 @@ services:
         volumes:
             - redis-data:/data
             - redis-conf:/usr/local/etc/redis/redis.conf
-        restart: always
         deploy:
             replicas: 1
     redisinsight:
@@ -14,7 +13,6 @@ services:
             - 8884:8001
         volumes:
             - insight-db:/db
-        restart: always
         depends_on:
             - redis
         deploy:
@@ -25,7 +23,6 @@ services:
         image: ${IMAGE_NAME}-api:latest
         deploy:
             replicas: 4
-        restart: always
         depends_on:
             - redis
     frontend:
@@ -34,7 +31,6 @@ services:
         image: ${IMAGE_NAME}-frontend:latest
         deploy:
             replicas: 1
-        restart: always
         depends_on:
             - api
     

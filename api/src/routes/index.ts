@@ -10,12 +10,12 @@ router.get('/', (req, res) => {
 })
 
 const routers : Record<string, express.Router> = {
-    '/': GPTRoutes
+    '/': GPTRoutes,
+    '/fake': FakeGPTRoutes
 };
 
 if(process.env.NODE_ENV === "development") {
     routers['/test'] = TestRoutes;
-    routers['/fake'] = FakeGPTRoutes;
 }
 
 for(const key of Object.keys(routers)) {
