@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-api:
-    uses: ./.github/workflows/docker-build-push.yml
+    uses: TangerieOrg/Workflows/.github/workflows/docker-build-push.yml
     with:
       image_name: everything-codex-api
       registry_name: docker.tangerie.xyz
@@ -16,7 +16,7 @@ jobs:
     secrets: inherit
 
   build-frontend:
-      uses: ./.github/workflows/docker-build-push.yml
+      uses: TangerieOrg/Workflows/.github/workflows/docker-build-push.yml
       with:
         image_name: everything-codex-frontend
         registry_name: docker.tangerie.xyz
@@ -25,7 +25,7 @@ jobs:
       secrets: inherit
     
   deploy:
-    uses: ./.github/workflows/docker-deploy.yml
+    uses: TangerieOrg/Workflows/.github/workflows/docker-deploy.yml
     needs: 
       - build-api
       - build-frontend
