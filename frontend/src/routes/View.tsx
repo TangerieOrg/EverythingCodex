@@ -35,10 +35,21 @@ export default function ViewRoute() {
                 <FontAwesomeIcon icon={solid("arrow-left")} className="pr-2 group-hover:-translate-x-0.5 transition" />
                 Return to Search
             </Link>
-            <h1 class="text-3xl font-medium mb-8">{title}</h1>
-
+            <h1 class="text-3xl font-medium mb-6">{title}</h1>
             {
-                text.length > 0 && <div class="prose lg:prose-lg p-4 rounded-lg bg-gray-300 bg-opacity-50">
+                category && <div class="my-2">
+                    <h1 class="font-bold mr-2 inline">Category</h1>
+                    <span class="inline">{category}</span>
+                </div>
+            }
+            {
+                format && <div class="my-2">
+                    <h1 class="font-bold mr-2 inline">Format</h1>
+                    <span class="inline">{format}</span>
+                </div>
+            }
+            {
+                text.length > 0 && <div class="prose lg:prose-lg p-4 rounded-lg bg-gray-300 bg-opacity-50 mt-6">
                     <ReactMarkdown children={text} />
                 </div>
             }
