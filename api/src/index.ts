@@ -9,9 +9,9 @@ dotenv.config({
     path: path.join(process.cwd(), process.env.NODE_ENV === 'development' ? ".env.development" : ".env")
 });
 
-const redis = createClient({
-    url: process.env.REDIS_URL
-})
+// const redis = createClient({
+//     url: process.env.REDIS_URL
+// })
 
 const app = express();
 
