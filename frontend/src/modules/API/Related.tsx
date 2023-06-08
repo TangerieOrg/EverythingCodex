@@ -47,6 +47,7 @@ export const useRelatedRequest = (req : RelatedRequest) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(req),
+            credentials: 'include',
             signal: controller.signal
         }).then(createResponseReader(
             data => actions.add(data.trim()),

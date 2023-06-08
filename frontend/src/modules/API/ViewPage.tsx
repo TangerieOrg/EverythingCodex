@@ -57,6 +57,7 @@ export const useViewPageRequest = (req : ViewRequest) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(req),
+            credentials: 'include',
             signal: controller.signal
         }).then(createResponseReader(
             data => actions.append(data),

@@ -1,6 +1,7 @@
 import { createViewPrompt } from "@modules/Library/prompts";
 import { makeRelatedStream, makeSearchStream } from "@modules/Library/streamed";
 import { createCompletionStream } from "@modules/OpenAI";
+import { recordRequest } from "@modules/Tracking/TrackRequest";
 import express from "express";
 
 const FakeGPTRoutes = express.Router();
@@ -9,6 +10,8 @@ FakeGPTRoutes.use((req, res, next) => {
     res.setHeader('Content-type', 'text/event-stream');
     res.setHeader('Transfer-Encoding', 'chunked');
     res.setHeader('X-Accel-Buffering', 'no');
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 })
 
@@ -48,10 +51,16 @@ const EXAMPLE_SEARCH_RESULTS = [
 FakeGPTRoutes.post('/search', async (req, res) => {
     res.statusCode = 200;
     
+    const finalResults : string[] = [];
+
     for(const item of EXAMPLE_SEARCH_RESULTS) {
-        await sleep(750);
+        await sleep(100);
         res.write(item + '\n')
+        finalResults.push(item);
     }
+
+    await recordRequest(req, finalResults);
+
     res.end();
 })
 
@@ -75,10 +84,16 @@ const EXAMPLE_RELATED_RESULTS = [
 FakeGPTRoutes.post('/related', async (req, res) => {
     res.statusCode = 200;
 
+    const finalResults : string[] = [];
+
     for(const item of EXAMPLE_RELATED_RESULTS) {
-        await sleep(750);
-        res.write(item + '\n')
+        await sleep(10);
+        res.write(item + '\n');
+        finalResults.push(item);
     }
+
+    await recordRequest(req, finalResults);
+    
     res.end();
 })
 
@@ -109,15 +124,20 @@ function randomInteger(min : number, max : number) {
 FakeGPTRoutes.post('/view', async (req, res) => {
     res.statusCode = 200;
 
+    let finalResult = ""
+
     let i = 0;
     while(i < EXAMPLE_VIEW_PAGE.length) {
-        await sleep(100)
+        await sleep(10)
         const l = randomInteger(15, 25);
-        res.write(EXAMPLE_VIEW_PAGE.slice(
+        const toSend = EXAMPLE_VIEW_PAGE.slice(
             i, i + l
-        ))
+        );
+        res.write(toSend);
+        finalResult += toSend;
         i+=l;
     }
+    await recordRequest(req, finalResult);
     res.end();
 })
 

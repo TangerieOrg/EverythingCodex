@@ -46,6 +46,7 @@ export const [useSearchResultsStore] = createImmerStore<SearchResultsStore>((get
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(searchStore.value),
+                credentials: 'include',
                 signal: store.controller.signal
             }).then(createResponseReader(
                 data => get().actions.add(data.trim()),
