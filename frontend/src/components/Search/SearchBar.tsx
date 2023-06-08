@@ -28,11 +28,16 @@ export default function SearchBar() {
             onInput={(ev : any) => setTerm(ev.target.value.trim()) }
             placeholder="Enter search term..."
         />
-        <StyledButton style="Purple" class="h-full whitespace-nowrap md:block md:ml-4 hidden" onClick={() => search()}>
+        <button
+            onClick={() => search()}
+            class="md:px-6 px-5 py-3 rounded-lg border-2 hover:text-white transition
+            h-full whitespace-nowrap ml-2
+            border-purple-600 text-purple-600 hover:bg-purple-600"
+        > 
             <FontAwesomeIcon icon={solid("magnifying-glass")} className="inline"/>
-            <span class="ml-2">
+            <span class="md:ml-2 ml-2 md:inline hidden">
                 Search
             </span>
-        </StyledButton>
+        </button>
     </span>
 }

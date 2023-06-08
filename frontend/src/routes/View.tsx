@@ -13,8 +13,11 @@ export default function ViewRoute() {
     const title = useQueryParameter("title", "");
     const [isViewingRelated, setIsViewingRelated] = useState(false);
     const { state, text } = useViewPageResultsStore();
-    const { actions: { reset: resetSearch }, value: { category, format } } = useSearchStore();
+    const { actions: searchActions, value: { category, format, term } } = useSearchStore();
 
+    const returnToSearch = () => {
+        if(!term) searchActions.reset();
+    }
     
     const makeRequest = useViewPageRequest({ title, category, format });
     const regenerate = useCallback(() => {
@@ -28,7 +31,7 @@ export default function ViewRoute() {
 
     return <div class="min-h-screen w-screen">
         <div class="max-w-3xl mx-auto px-8 py-12">
-            <Link to="/" className="text-lg hover:text-purple-700 transition mb-6 block group" onClick={() => resetSearch()}>
+            <Link to="/" className="text-lg hover:text-purple-700 transition mb-6 block group" onClick={() => returnToSearch()}>
                 <FontAwesomeIcon icon={solid("arrow-left")} className="pr-2 group-hover:-translate-x-0.5 transition" />
                 Return to Search
             </Link>
