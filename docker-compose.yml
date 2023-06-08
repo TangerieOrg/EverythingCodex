@@ -19,16 +19,16 @@ services:
             - RIPROXYENABLE=True
             - RIPROXYPREFIX=/codex/redis
     api:
-        ports:
-            - 8883:80
+        # ports:
+        #     - 8883:80
         image: ${IMAGE_NAME}-api:latest
         deploy:
             replicas: 4
         depends_on:
             - redis
     frontend:
-        ports:
-            - 8882:3000
+        # ports:
+        #     - 8882:3000
         image: ${IMAGE_NAME}-frontend:latest
         deploy:
             replicas: 1
