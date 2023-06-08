@@ -9,8 +9,6 @@ services:
             replicas: 1
     redisinsight:
         image: redislabs/redisinsight:latest
-        ports:
-            - 8884:8001
         volumes:
             - insight-db:/db
         depends_on:
