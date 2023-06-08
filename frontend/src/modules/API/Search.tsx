@@ -61,10 +61,12 @@ export const [useSearchResultsStore] = createImmerStore<SearchResultsStore>((get
 }));
 
 export const SearchFormatOptions = [
-    "Article",
     "Essay",
-    "Poem",
     "Story",
     "Scientific Paper",
-    "Guide"
+    "Guide",
+    "Blog",
+    "Poem",
+    "Novel",
+    "Forum Post"
 ] as const;

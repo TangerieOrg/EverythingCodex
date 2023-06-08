@@ -21,8 +21,8 @@ export default function SearchRoute() {
         }
     }, [search])
 
-    return <div class="min-h-screen w-screen">
-        <div class={`w-full transition-all duration-1000 ${isSearching ? "md:-mt-[4.5rem] -mt-[3.5rem]" : "mt-44"}`}>
+    return <div class="min-h-screen w-screen pb-4">
+        <div class={`w-full transition-all duration-1000 ${isSearching ? "md:-mt-[4.5rem] -mt-[3.5rem]" : "pt-44"}`}>
             <SearchBanner/>
         </div>
         {

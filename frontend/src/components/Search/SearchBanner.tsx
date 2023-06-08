@@ -16,9 +16,8 @@ const WORDS = [
 export default function SearchBanner() {
     const { pathname } = useLocation();
     const isSearching = pathname === '/search';
-    const [advancedShown, setAdvancedShown] = useState(false);
     const { value } = useSearchStore();
-    const { state } = useSearchResultsStore();
+    const [advancedShown, setAdvancedShown] = useState(value.format !== undefined || value.category !== undefined);
 
     const sequence = useMemo(() => {
         const seq: (string | number)[] = [];
