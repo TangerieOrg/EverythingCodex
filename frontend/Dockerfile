@@ -1,17 +1,17 @@
 FROM --platform=$BUILDPLATFORM node:18.3.0 AS build
 
-ARG FONTAWESOME_NPM_AUTH_TOKEN
-ENV FONTAWESOME_NPM_AUTH_TOKEN=$FONTAWESOME_NPM_AUTH_TOKEN
+ARG FONT_AWESOME_KEY
+ENV FONT_AWESOME_KEY=$FONT_AWESOME_KEY
 
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN echo NPM Auth $FONTAWESOME_NPM_AUTH_TOKEN
+RUN echo NPM Auth $FONT_AWESOME_KEY
 
 RUN npm config set "@fortawesome:registry" https://npm.fontawesome.com/
-RUN npm config set "//npm.fontawesome.com/:_authToken" $FONTAWESOME_NPM_AUTH_TOKEN
+RUN npm config set "//npm.fontawesome.com/:_authToken" $FONT_AWESOME_KEY
 
 RUN npm config ls
 
