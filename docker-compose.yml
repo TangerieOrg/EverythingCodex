@@ -17,6 +17,9 @@ services:
             - redis
         deploy:
             replicas: 1
+        environment:
+            - RIPROXYENABLE=True
+            - RIPROXYPREFIX=/codex/redis
     api:
         ports:
             - 8883:80
@@ -33,6 +36,22 @@ services:
             replicas: 1
         depends_on:
             - api
+
+    # Do our routing here instead
+    nginx:
+        ports:
+            - 8884:80
+        image: nginx:alpine
+        deploy:
+            replicas: 1
+        volumes:
+            - type: bind
+              source: ./nginx/nginx.conf
+              target: /etc/nginx/nginx.conf
+        depends_on:
+            - api
+            - frontend
+            - redisinsight
     
 volumes:
     redis-data:

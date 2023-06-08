@@ -2,8 +2,16 @@ import express from "express";
 import cors from "cors";
 import dotenv from 'dotenv';
 import router from "./routes";
+import { createClient } from 'redis';
+import path from "path";
 
-dotenv.config();
+dotenv.config({
+    path: path.join(process.cwd(), process.env.NODE_ENV === 'development' ? ".env.development" : ".env")
+});
+
+const redis = createClient({
+    url: process.env.REDIS_URL
+})
 
 const app = express();
 
