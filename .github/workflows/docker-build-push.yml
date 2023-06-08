@@ -35,21 +35,37 @@ on:
           required: true
 
 jobs:
-  docker-build-push:
+  check-changes:
     runs-on: [self-hosted, media]
+    outputs:
+      value: ${{ steps.changes.outputs.source }}
     steps:
       - name: Pull repo
         uses: actions/checkout@v3
         with:
           submodules: true
           clean: true
-          ref: ${{inputs.ref}}
+          ref: ${{ inputs.ref }}
       - uses: dorny/paths-filter@v2
         id: changes
         with:
           filters: |
             source:
               - '${{inputs.path}}/**'
+      - name: Debug
+        run: echo File Changes in ${{ inputs.path }} = ${{ steps.changes.outputs.source }}
+
+  docker-build-push:
+    runs-on: [self-hosted, media]
+    needs: check-changes
+    if: needs.check-changes.outputs.value == 'true'
+    steps:
+      - name: Pull repo
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          clean: true
+          ref: ${{ inputs.ref }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -69,14 +85,10 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Print State
-        run: echo File Changes in ${{inputs.path}} = ${{steps.changes.outputs.source}}
-
       - name: Print data
         run: echo Building to ${{inputs.registry_name}}/${{inputs.image_name}} ${{env.CURRENT_TAG}}
 
       - name: Build and push web image
-        if: steps.changes.outputs.source == 'true'
         run: >
           docker buildx build 
           --push
