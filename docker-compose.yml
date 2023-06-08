@@ -6,8 +6,19 @@ services:
             - redis-data:/data
             - redis-conf:/usr/local/etc/redis/redis.conf
         restart: always
-        # networks:
-        #     - internal
+        deploy:
+            replicas: 1
+    redisinsight:
+        image: redislabs/redisinsight:latest
+        ports:
+            - 8884:8001
+        volumes:
+            - insight-db:/db
+        restart: always
+        depends_on:
+            - redis
+        deploy:
+            replicas: 1
     api:
         ports:
             - 8883:80
@@ -15,9 +26,6 @@ services:
         deploy:
             replicas: 4
         restart: always
-        # networks:
-        #     - internal
-        #     - default
         depends_on:
             - redis
     frontend:
@@ -27,20 +35,10 @@ services:
         deploy:
             replicas: 1
         restart: always
-        # networks:
-        #     - default
         depends_on:
             - api
     
 volumes:
     redis-data:
     redis-conf:
-
-# networks:
-#     default:
-#         name: default
-#         driver: overlay
-#     internal:
-#         name: internal
-#         internal: true
-#         driver: overlay
+    insight-db:
