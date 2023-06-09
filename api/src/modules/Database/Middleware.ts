@@ -16,8 +16,8 @@ export async function DatabaseMiddleware(req : Request, res : Response, next : N
     const client = await CreateDatabase();
 
     req.redis = client;
-
-    req.on("finish", () => {
+    
+    res.on("finish", () => {
         client.quit();
     });
 

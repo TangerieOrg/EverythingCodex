@@ -18,7 +18,7 @@ export interface SearchStore {
 const getValueFromURL = () : Partial<SearchRequest> => {
     const params = new URLSearchParams(window.location.search);
     const v = Object.fromEntries(params.entries()) as Partial<SearchRequest>;
-    return pick(v, ["term", "format", "category"]);
+    return pick(v, ["term", "format", "category", "length"]);
 }
 
 export const [useSearchStore, getSearchStore, searchStoreEmitter] = createImmerStore<ImmerStore<SearchStore>>((get, set) => ({

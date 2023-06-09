@@ -71,3 +71,10 @@ export const SearchFormatOptions = [
     "Novel",
     "Forum Post"
 ] as const;
+
+export const LengthOptions = [
+    "Short",
+    "Medium",
+    "Long",
+    "Extra Long"
+] as const;

@@ -1,6 +1,6 @@
 import { RelatedRequest, SearchRequest, ViewRequest } from "./types";
 
-export const createSearchPrompt = ({ term, format, category } : SearchRequest) => {
+export const createSearchPrompt = ({ term, format, category, length } : SearchRequest) => {
     const lines : string[] = [
         "Welcome to the library of everything. Here contains all texts ever written.\n",
         "You searched for:",
@@ -9,6 +9,7 @@ export const createSearchPrompt = ({ term, format, category } : SearchRequest) =
 
     if(format) lines.push(`Format: ${format}`);
     if(category) lines.push(`Category: ${category}`);
+    if(length) lines.push(`Length: ${length}`);
 
     lines.push(
         "\nSearch results (as a json array of text titles):",
@@ -24,7 +25,7 @@ You are currently viewing "${title}"
 Related Texts (as a json array of text titles):
 [ "`;
 
-export const createViewPrompt = ({ title, format, category } : ViewRequest) => {
+export const createViewPrompt = ({ title, format, category, length } : ViewRequest) => {
     const lines : string[] = [
         "Welcome to the library of everything. Here contains all texts ever written.\n",
         `You are currently viewing "${title}"\n`,
@@ -35,6 +36,7 @@ export const createViewPrompt = ({ title, format, category } : ViewRequest) => {
 
     if(format) lines.push(`Format: ${format}`);
     if(category) lines.push(`Category: ${category}`);
+    if(length) lines.push(`Length: ${length}`);
 
     lines.push(
         "\n---\n",
