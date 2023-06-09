@@ -24,13 +24,14 @@ services:
 
     # Do our routing here instead
     nginx:
-        ports:
-            - 8884:80
+        # ports:
+        #     - 8884:80
         image: nginx:alpine
         deploy:
             replicas: 1
             labels:
-                xyz.tangerie.reverse_proxy: "/codex"
+                xyz.tangerie.reverse_proxy.path: "/codex"
+                xyz.tangerie.reverse_proxy.port: "80"
         networks:
             - default
             - nginx-proxy-overlay
@@ -47,6 +48,7 @@ volumes:
     redis-conf:
 
 networks:
+    default:
     nginx-proxy-overlay:
         external: true
         driver: overlay
