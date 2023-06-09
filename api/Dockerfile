@@ -1,4 +1,4 @@
-FROM node:18.3.0 as build
+FROM node:18.3.0
 
 ARG OPENAI_KEY
 ENV OPENAI_KEY=$OPENAI_KEY
