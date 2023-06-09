@@ -29,6 +29,11 @@ services:
         image: nginx:alpine
         deploy:
             replicas: 1
+            labels:
+                xyz.tangerie.reverse_proxy: "/codex"
+        networks:
+            - default
+            - nginx-proxy-overlay
         volumes:
             - type: bind
               source: ./nginx/nginx.conf
@@ -40,3 +45,8 @@ services:
 volumes:
     redis-data:
     redis-conf:
+
+networks:
+    nginx-proxy-overlay:
+        external: true
+        driver: overlay
