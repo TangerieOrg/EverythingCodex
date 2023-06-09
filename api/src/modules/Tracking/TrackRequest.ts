@@ -27,7 +27,7 @@ export const recordRequest = async (req : Request, result : any) => {
     }
 
     await req.redis.json.arrAppend(
-        `${req.tracking}`, 
+        `users.${req.tracking}`, 
         ".requests", 
         {
             path: req.path,
@@ -35,4 +35,6 @@ export const recordRequest = async (req : Request, result : any) => {
             result
         }
     );
+
+    await recordToLargeLog(req, result);
 }
