@@ -29,9 +29,10 @@ const HistoryItemComponent = ({item, index} : {item : HistoryItem, index : numbe
     const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
-        setTimeout(() => {
+        const hdl = setTimeout(() => {
             setIsActive(true);
         }, index * 75);
+        return () => clearTimeout(hdl);
     }, []);
 
     if(!isActive) return null;
@@ -44,16 +45,14 @@ export default function HistoryRoute() {
     const { actions, history, state } = useUserInfoStore();
 
     useEffect(() => {
+        if(state !== "ready") return;
+        actions.next();
+    }, [state, history]);
+
+    useEffect(() => {
         actions.reset();
         actions.next();
     }, []);
-
-    useEffect(() => {
-        if (state === "loading" || state === "empty") return;
-        console.log(history);
-        if (state === "finished") return;
-        actions.next();
-    }, [state, history]);
 
     return <div class="min-h-screen w-screen">
         <div class="max-w-3xl mx-auto px-8 py-12">

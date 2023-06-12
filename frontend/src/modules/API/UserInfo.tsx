@@ -8,6 +8,7 @@ export type UserInfoStore = ImmerStore<{
     history: HistoryItem[];
     offset: number;
     state: LoadingState;
+    controller?: AbortController;
     actions: {
         reset() : void;
         next() : void;
@@ -22,9 +23,11 @@ export const [useUserInfoStore] = createImmerStore<UserInfoStore>((get, set) => 
     state: "empty",
     actions: {
         reset: () => set(store => {
+            store.controller?.abort();
             store.history = [];
             store.offset = 0;
             store.state = "empty";
+            delete store.controller;
         }),
         update: (s, offset, items) => set(store => {
             store.state = s;
