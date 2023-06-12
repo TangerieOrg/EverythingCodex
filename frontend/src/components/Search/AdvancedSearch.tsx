@@ -1,6 +1,8 @@
 import { LengthOptions, SearchFormatOptions } from "@modules/API/Search"
+import { useGenerateStore } from "@modules/GenerateStore";
 import { getSearchURL, useSearchStore } from "@modules/SearchStore";
 import { toQueryString } from "@modules/Util/Query";
+import { pick } from "lodash";
 import { useState } from "preact/hooks";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -10,6 +12,16 @@ export default function AdvancedSearch() {
     const { actions, value } = useSearchStore();
     const [isCustomFormat, setIsCustomFormat] = useState(_isCustomFormat(value.format as any));
     const navigate = useNavigate();
+    const generateStore = useGenerateStore();
+
+    const goToGenerate = () => {
+        generateStore.actions.set("title", value.term);
+        const m = pick(value, ["format", "category", "summary"]);
+        for(const key in m) {
+            const v = m[key as keyof typeof m]!;
+            if(v.length > 0) generateStore.actions.set(key as any, v);
+        }
+    }
 
     const setKey = <K extends keyof typeof value>(k: K, v: (typeof value)[K] | undefined) => {
         if (v === undefined || v.length === 0) actions.delete(k);
@@ -107,6 +119,7 @@ export default function AdvancedSearch() {
             h-full whitespace-nowrap text-center
             border-purple-600 text-purple-600 hover:bg-purple-600"
             to="/generate"
+            onClick={goToGenerate}
         > 
             Generate Custom Page
         </Link>
