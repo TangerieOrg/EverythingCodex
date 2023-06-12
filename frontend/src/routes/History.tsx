@@ -4,28 +4,57 @@ import { useUserInfoStore } from "@modules/API/UserInfo";
 import { useEffect, useState } from "preact/hooks";
 import { Link } from "react-router-dom";
 import { JSX } from "preact";
-import { HistoryItem } from "@modules/API/types";
+import { HistoryItem, RelatedRequest, SearchRequest, ViewRequest } from "@modules/API/types";
 import { toQueryString } from "@modules/Util/Query";
 import { useSubtitle } from "@modules/useTitle";
+import { useSearchStore } from "@modules/SearchStore";
+import { pick } from "lodash";
 
-const HistoryItemMap: Record<"search" | "view", ({ request }: { request: any }) => JSX.Element> = {
-    search: ({ request }) => <Link
-        className="hover:text-purple-700 transition"
-        to={`/search?${toQueryString(request)}`}
-    >
-        <span class="font-bold mr-4">Search</span>
-        <span>{request.term}</span>
-    </Link>,
-    view: ({ request }) => <Link
+const ViewHistoryItem = ({ request }: { request: ViewRequest }) => {
+    const { actions } = useSearchStore();
+
+    const goToPage = () => {
+        const m = pick(request, ["format", "category", "summary"]);
+        for(const key in m) {
+            const v = m[key as keyof typeof m]!;
+            if(v.length > 0) actions.set(key as any, v);
+        }
+    }
+
+    return <Link
         className="hover:text-purple-700 transition"
         to={`/view?${toQueryString(request)}`}
+        onClick={goToPage}
     >
         <span class="font-bold mr-4">View</span>
         <span>{request.title}</span>
     </Link>
 }
 
-const HistoryItemComponent = ({item, index} : {item : HistoryItem, index : number}) => {
+const SearchHistoryItem = ({ request }: { request: SearchRequest }) => {
+    return <Link
+        className="hover:text-purple-700 transition"
+        to={`/search?${toQueryString(request)}`}
+    >
+        <span class="font-bold mr-4">Search</span>
+        <span>{request.term}</span>
+    </Link>
+}
+
+const RelatedHistoryItem = ({ request }: { request: RelatedRequest }) => {
+    return <span>
+        <span class="font-bold mr-4">Related</span>
+        <span>{request.title}</span>
+    </span>
+}
+
+const HistoryItemMap: Record<"search" | "view" | "related", ({ request }: { request: any }) => JSX.Element> = {
+    "search": SearchHistoryItem,
+    "view": ViewHistoryItem,
+    "related": RelatedHistoryItem
+}
+
+const HistoryItemComponent = ({ item, index }: { item: HistoryItem, index: number }) => {
     const Component = HistoryItemMap[item.path.slice(1) as keyof typeof HistoryItemMap];
     const [isActive, setIsActive] = useState(false);
 
@@ -36,9 +65,9 @@ const HistoryItemComponent = ({item, index} : {item : HistoryItem, index : numbe
         return () => clearTimeout(hdl);
     }, []);
 
-    if(!isActive) return null;
+    if (!isActive) return null;
     return <div class="pb-4 animate-in fade-in slide-in-from-left-4 duration-500">
-        <Component request={item.request}/>
+        <Component request={item.request} />
     </div>
 }
 
@@ -47,7 +76,7 @@ export default function HistoryRoute() {
     const { actions, history, state } = useUserInfoStore();
 
     useEffect(() => {
-        if(state !== "ready") return;
+        if (state !== "ready") return;
         actions.next();
     }, [state, history]);
 
@@ -66,8 +95,8 @@ export default function HistoryRoute() {
             <h1 class="text-3xl font-medium mb-6">History</h1>
             <div class="max-w-2xl mx-auto mt-8 text-lg">
                 {
-                    history.filter(x => x.path !== "/related").map((item, i) => (
-                        <HistoryItemComponent item={item} index={i} key={i}/>
+                    history.map((item, i) => (
+                        <HistoryItemComponent item={item} index={i} key={i} />
                     ))
                 }
             </div>

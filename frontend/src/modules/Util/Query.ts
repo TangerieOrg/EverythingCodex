@@ -12,7 +12,7 @@ export function useQueryParameter(key : string, defaultValue?: string) {
     return useMemo(() => q.get(key) ?? defaultValue, [q]);
 }
 
-export function toQueryString(data : Record<string, string>) {
+export function toQueryString(data : Record<string, any>) {
     const params = new URLSearchParams();
     for(const key in data) params.set(key, data[key])
     return params.toString();

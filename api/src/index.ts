@@ -34,6 +34,15 @@ app.use(cookieMiddleware(process.env.COOKIE_SECRET || "cookie_secret"));
 app.use(TrackingMiddleware);
 app.use(DatabaseMiddleware);
 
+// Disable cache
+app.use((req, res, next) => {
+    res.setHeader("Surrogate-Control", "no-store");
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Expires", "0");
+
+    next();
+})
+
 const LOG_REQUESTS = true //process.env.NODE_ENV === 'production';
 
 // Logging

@@ -4,16 +4,26 @@ import TypedTitle from "@components/TypedTitle";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useGenerateStore } from "@modules/GenerateStore";
+import { useSearchStore } from "@modules/SearchStore";
 import { toQueryString } from "@modules/Util/Query";
 import { useSubtitle } from "@modules/useTitle";
+import { pick } from "lodash";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function GenerateRoute() {
     const { value } = useGenerateStore();
     const navigate = useNavigate();
+    const { actions } = useSearchStore();
     
     const goToPage = () => {
         if((value.title ?? "").trim().length === 0) return;
+
+        const m = pick(value, ["format", "category", "summary"]);
+        for(const key in m) {
+            const v = m[key as keyof typeof m]!;
+            if(v.length > 0) actions.set(key as any, v);
+        }
+
         const url = `/view?${toQueryString(value)}`;
         navigate(url);
     }
