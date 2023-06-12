@@ -21,10 +21,21 @@ export default function Expandable({ open, children, openClass = "", closedClass
         }
     }, [open]);
 
+    useEffect(() => {
+        if(!open || !divRef.current) return;
+        const resizeObserver = new ResizeObserver(el => {
+            setHeight(el[0].contentRect.height)
+        })
+        resizeObserver.observe(divRef.current);
+        return () => resizeObserver.disconnect();
+    }, [height, open]);
+
     
 
-    return <div class={`overflow-y-hidden transition-[height] ${props.class ?? ""} ${open ? openClass : closedClass}`} ref={divRef} style={{ height }}>
-        {children}
+    return <div class={`overflow-y-hidden transition-[height] ${props.class ?? ""} ${open ? openClass : closedClass}`}  style={{ height }}>
+        <div ref={divRef}>
+            {children}
+        </div>
     </div>
 }
 

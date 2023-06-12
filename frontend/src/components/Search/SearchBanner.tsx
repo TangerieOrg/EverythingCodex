@@ -4,8 +4,8 @@ import SearchBar from './SearchBar';
 import Expandable from '@components/Expandable';
 import AdvancedSearch from './AdvancedSearch';
 import { useSearchStore } from '@modules/SearchStore';
-import { useSearchResultsStore } from '@modules/API/Search';
 import { useLocation } from 'react-router-dom';
+import Collapsible from 'react-collapsible';
 
 const WORDS = [
     "Search for Everything",
@@ -44,6 +44,7 @@ export default function SearchBanner() {
                     >
                         Advanced Options
                     </button>
+                    
                     <Expandable open={advancedShown} class="duration-500" openClass='delay-100' closedClass=''>
                         <div class="p-4">
                             <AdvancedSearch />
