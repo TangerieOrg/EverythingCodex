@@ -1,6 +1,10 @@
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LengthOptions, SearchFormatOptions } from "@modules/API/Search"
 import { getSearchURL, useSearchStore } from "@modules/SearchStore";
+import { toQueryString } from "@modules/Util/Query";
 import { useState } from "preact/hooks";
+import { If } from "react-if";
 import { useNavigate } from "react-router-dom";
 
 const _isCustomFormat = (value: string) => !(SearchFormatOptions.includes(value as any) || value == undefined || value.length == 0)
@@ -23,6 +27,15 @@ export default function AdvancedSearch() {
             setKey("format", v)
             setIsCustomFormat(false);
         }
+    }
+
+    const goToPage = () => {
+        if((value.term ?? "").trim().length === 0) return;
+        const url = `/view?${toQueryString({
+            title: value.term ?? "",
+            ...value
+        })}`;
+        navigate(url);
     }
 
     return <div class="w-full h-fit grid grid-cols-1 gap-y-4">
@@ -90,6 +103,24 @@ export default function AdvancedSearch() {
             }}
         >
             Reset Search
+        </button>
+        <div class="flex flex-row">
+            <div class="w-full h-full flex flex-col justify-center">
+                <div class="w-full border-b-2 border-gray-400 h-0"></div>
+            </div>
+            <div class="block px-4 text-gray-400">OR</div>
+            <div class="w-full h-full flex flex-col justify-center">
+                <div class="w-full border-b-2 border-gray-400 h-0"></div>
+            </div>
+        </div>
+
+        <button
+            onClick={goToPage}
+            class="md:px-6 px-5 py-3 rounded-lg border-2 hover:text-white transition
+            h-full whitespace-nowrap
+            border-purple-600 text-purple-600 hover:bg-purple-600"
+        > 
+            Go Directly to Page
         </button>
     </div>
 }
