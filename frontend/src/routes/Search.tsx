@@ -10,6 +10,9 @@ import { If, Then } from "react-if";
 
 // clock-rotate-left
 
+const mediaQuery = window.matchMedia('(min-width: 768px)')
+console.log(mediaQuery.matches);
+
 export default function SearchRoute() {
     const { pathname, search } = useLocation();
     const isSearching = pathname === '/search';
@@ -49,7 +52,7 @@ export default function SearchRoute() {
                 </div>
             </Then>
         </If>
-        <Link class={`fixed bottom-4 right-4 group transition duration-500 ${isSearching ? "pointer-events-none opacity-0" : "opacity-100"}`} to="/history">
+        <Link class={`fixed ${mediaQuery.matches ? "bottom-4" : "top-4"} right-4 group transition duration-500 ${isSearching ? "pointer-events-none opacity-0" : "opacity-100"}`} to="/history">
             <FontAwesomeIcon icon={solid("clock-rotate-left")} className="text-2xl transition duration-500 group-hover:-rotate-[20deg]" />
         </Link>
     </div>
