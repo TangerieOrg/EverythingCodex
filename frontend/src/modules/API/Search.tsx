@@ -40,7 +40,7 @@ export const [useSearchResultsStore] = createImmerStore<SearchResultsStore>((get
             
             const searchStore = getSearchStore();
 
-            fetch(getUrl("/search"), {
+            fetch(getUrl("/gpt/search"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

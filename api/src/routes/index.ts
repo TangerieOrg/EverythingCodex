@@ -2,6 +2,7 @@ import express from "express";
 import TestRoutes from "./test";
 import GPTRoutes from "./gpt";
 import FakeGPTRoutes from "./fake";
+import UserRoutes from "./user";
 
 const router = express.Router();
 
@@ -10,8 +11,9 @@ router.get('/', (req, res) => {
 })
 
 const routers : Record<string, express.Router> = {
-    '/': GPTRoutes,
-    '/fake': FakeGPTRoutes
+    '/gpt': GPTRoutes,
+    '/fake': FakeGPTRoutes,
+    '/user': UserRoutes,
 };
 
 if(process.env.NODE_ENV === "development") {
