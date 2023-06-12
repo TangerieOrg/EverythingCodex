@@ -9,7 +9,7 @@ jobs:
   build-api:
     uses: TangerieOrg/Workflows/.github/workflows/docker-build-push.yml@main
     with:
-      image_name: everything-codex-api
+      image_name: everything-codex/api
       registry_name: docker.tangerie.xyz
       ref: main
       path: api
@@ -18,7 +18,7 @@ jobs:
   build-frontend:
       uses: TangerieOrg/Workflows/.github/workflows/docker-build-push.yml@main
       with:
-        image_name: everything-codex-frontend
+        image_name: everything-codex/frontend
         registry_name: docker.tangerie.xyz
         ref: main
         path: frontend

@@ -10,13 +10,13 @@ services:
         deploy:
             replicas: 1
     api:
-        image: ${IMAGE_NAME}-api:latest
+        image: ${IMAGE_NAME}/api:latest
         deploy:
             replicas: 4
         depends_on:
             - redis
     frontend:
-        image: ${IMAGE_NAME}-frontend:latest
+        image: ${IMAGE_NAME}/frontend:latest
         deploy:
             replicas: 1
         depends_on:
