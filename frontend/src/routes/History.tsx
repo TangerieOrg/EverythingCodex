@@ -1,12 +1,11 @@
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useUserInfoStore } from "@modules/API/UserInfo";
-import { useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { Link } from "react-router-dom";
 import { JSX } from "preact";
 import { HistoryItem } from "@modules/API/types";
 import { toQueryString } from "@modules/Util/Query";
-
 
 const HistoryItemMap: Record<"search" | "view", ({ request }: { request: any }) => JSX.Element> = {
     search: ({ request }) => <Link
@@ -25,9 +24,20 @@ const HistoryItemMap: Record<"search" | "view", ({ request }: { request: any }) 
     </Link>
 }
 
-const HistoryItemComponent = ({item} : {item : HistoryItem}) => {
+const HistoryItemComponent = ({item, index} : {item : HistoryItem, index : number}) => {
     const Component = HistoryItemMap[item.path.slice(1) as keyof typeof HistoryItemMap];
-    return <Component request={item.request}/>
+    const [isActive, setIsActive] = useState(false);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsActive(true);
+        }, index * 75);
+    }, []);
+
+    if(!isActive) return null;
+    return <div class="pb-4 animate-in fade-in slide-in-from-left-4 duration-500">
+        <Component request={item.request}/>
+    </div>
 }
 
 export default function HistoryRoute() {
@@ -56,9 +66,7 @@ export default function HistoryRoute() {
             <div class="max-w-2xl mx-auto mt-8 text-lg">
                 {
                     history.filter(x => x.path !== "/related").map((item, i) => (
-                        <div key={i} class="pb-4 animate-in fade-in slide-in-from-left-4 duration-500">
-                            <HistoryItemComponent item={item}/>
-                        </div>
+                        <HistoryItemComponent item={item} index={i} key={i}/>
                     ))
                 }
             </div>
