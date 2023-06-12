@@ -14,7 +14,8 @@ async function getCookie(req : Request, res : Response) {
         res.cookie("tracker", cookie, {
             signed: true,
             expires: new Date(9999, 1),
-            sameSite: 'none'
+            sameSite: 'none',
+            path: process.env.NODE_ENV === "development" ? "/" : "/codex"
         });
     }
 
