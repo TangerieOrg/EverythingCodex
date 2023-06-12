@@ -32,4 +32,5 @@ jobs:
     with:
       image_name: everything-codex
       registry_name: docker.tangerie.xyz
+      
     secrets: inherit
