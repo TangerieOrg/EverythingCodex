@@ -8,6 +8,7 @@ import StyledButton from '@components/StyledButton';
 import { Link, useLocation } from 'react-router-dom';
 import { If, Then } from "react-if";
 import { useSearchStore } from '@modules/SearchStore';
+import { useSubtitle } from '@modules/useTitle';
 
 // clock-rotate-left
 
@@ -19,6 +20,8 @@ export default function SearchRoute() {
     const isSearching = pathname === '/search';
     const searchStore = useSearchStore();
     const { state, actions } = useSearchResultsStore();
+
+    useSubtitle(isSearching ? "Search" : undefined);
 
     useEffect(() => {
         if (isSearching) {

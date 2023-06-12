@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { JSX } from "preact";
 import { HistoryItem } from "@modules/API/types";
 import { toQueryString } from "@modules/Util/Query";
+import { useSubtitle } from "@modules/useTitle";
 
 const HistoryItemMap: Record<"search" | "view", ({ request }: { request: any }) => JSX.Element> = {
     search: ({ request }) => <Link
@@ -42,6 +43,7 @@ const HistoryItemComponent = ({item, index} : {item : HistoryItem, index : numbe
 }
 
 export default function HistoryRoute() {
+    useSubtitle("History");
     const { actions, history, state } = useUserInfoStore();
 
     useEffect(() => {

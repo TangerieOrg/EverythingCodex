@@ -7,12 +7,15 @@ import { useViewPageRequest, useViewPageResultsStore } from "@modules/API/ViewPa
 import { useGenerateStore } from "@modules/GenerateStore";
 import { useSearchStore } from "@modules/SearchStore";
 import { useQueryParameter } from "@modules/Util/Query";
+import { useSubtitle } from "@modules/useTitle";
 import { pick } from "lodash";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import ReactMarkdown from 'react-markdown'
 import { Link, useNavigate } from "react-router-dom";
 
 export default function ViewRoute() {
+    useSubtitle("View");
+
     const title = useQueryParameter("title", "");
     const [isViewingRelated, setIsViewingRelated] = useState(false);
     const [isEditingTitle, setIsEditingTitle] = useState(false);

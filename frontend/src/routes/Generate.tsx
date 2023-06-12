@@ -5,6 +5,7 @@ import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useGenerateStore } from "@modules/GenerateStore";
 import { toQueryString } from "@modules/Util/Query";
+import { useSubtitle } from "@modules/useTitle";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function GenerateRoute() {
@@ -16,6 +17,8 @@ export default function GenerateRoute() {
         const url = `/view?${toQueryString(value)}`;
         navigate(url);
     }
+
+    useSubtitle("Generate");
 
     return <div class="min-h-screen w-screen pb-4 pt-4 md:pt-0">
         <div class="w-full">
