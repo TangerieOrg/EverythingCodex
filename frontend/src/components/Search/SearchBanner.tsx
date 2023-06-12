@@ -5,13 +5,8 @@ import Expandable from '@components/Expandable';
 import AdvancedSearch from './AdvancedSearch';
 import { useSearchStore } from '@modules/SearchStore';
 import { useLocation } from 'react-router-dom';
-import Collapsible from 'react-collapsible';
+import TypedTitle from '@components/TypedTitle';
 
-const WORDS = [
-    "Search for Everything",
-    "Search for Anything",
-    "Explore Infinity"
-];
 
 export default function SearchBanner() {
     const { pathname } = useLocation();
@@ -19,21 +14,8 @@ export default function SearchBanner() {
     const { value } = useSearchStore();
     const [advancedShown, setAdvancedShown] = useState(value.format !== undefined || value.category !== undefined);
 
-    const sequence = useMemo(() => {
-        const seq: (string | number)[] = [];
-
-        for (const w of WORDS) {
-            seq.push(w, 2000);
-        }
-
-        return seq;
-    }, []);
-
     return <>
-        <h1 class={`text-center text-3xl md:text-6xl mb-8 font-extralight transition ${isSearching ? "opacity-0" : "opacity-100"}`}>
-            {/* @ts-ignore */}
-            <TypeAnimation key={isSearching} sequence={isSearching ? ["", 100] : sequence} speed={40} repeat={Infinity} />
-        </h1>
+        <TypedTitle hidden={isSearching}/>
         <div class="mx-auto max-w-2xl w-full px-8">
             <div class="flex flex-col w-full">
                 <SearchBar />

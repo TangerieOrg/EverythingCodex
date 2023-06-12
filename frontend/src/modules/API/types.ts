@@ -2,6 +2,7 @@ export interface TextMetadata {
     format : string;
     category : string;
     length : string;
+    summary : string;
 }
 
 export interface SearchRequest extends Partial<TextMetadata> {

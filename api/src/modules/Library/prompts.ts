@@ -1,15 +1,25 @@
 import { RelatedRequest, SearchRequest, ViewRequest } from "./types";
 
-export const createSearchPrompt = ({ term, format, category, length } : SearchRequest) => {
+export const capitalize = (str : string) => str.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+
+export const createMetadataLines = (metadata : Record<string, string>) => {
+    const lines : string[] = [];
+
+    for(const key in metadata) {
+        lines.push(`${capitalize(key)}: ${metadata[key]}`);
+    }
+
+    return lines;
+}
+
+export const createSearchPrompt = ({ term, ...metadata } : SearchRequest) => {
     const lines : string[] = [
         "Welcome to the library of everything. Here contains all texts ever written.\n",
         "You searched for:",
         `Term: ${term}`
     ];
 
-    if(format) lines.push(`Format: ${format}`);
-    if(category) lines.push(`Category: ${category}`);
-    if(length) lines.push(`Length: ${length}`);
+    lines.push(...createMetadataLines(metadata));
 
     lines.push(
         "\nSearch results (as a json array of text titles):",
@@ -25,7 +35,7 @@ You are currently viewing "${title}"
 Related Texts (as a json array of text titles):
 [ "`;
 
-export const createViewPrompt = ({ title, format, category, length } : ViewRequest) => {
+export const createViewPrompt = ({ title, ...metadata } : ViewRequest) => {
     const lines : string[] = [
         "Welcome to the library of everything. Here contains all texts ever written.\n",
         `You are currently viewing "${title}"\n`,
@@ -34,9 +44,7 @@ export const createViewPrompt = ({ title, format, category, length } : ViewReque
         `Title: ${title}`
     ];
 
-    if(format) lines.push(`Format: ${format}`);
-    if(category) lines.push(`Category: ${category}`);
-    if(length) lines.push(`Length: ${length}`);
+    lines.push(...createMetadataLines(metadata));
 
     lines.push(
         "\n---\n",

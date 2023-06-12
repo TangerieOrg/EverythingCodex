@@ -85,6 +85,8 @@ GPTRoutes.post('/view', async (req, res) => {
 
     const prompt = createViewPrompt(req.body);
     
+    console.log(prompt);
+
     const emitter = await createCompletionStream({
         model: "text-davinci-003",
         prompt,

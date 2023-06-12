@@ -4,25 +4,39 @@ import ViewMetadata from "@components/View/ViewMetadata";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useViewPageRequest, useViewPageResultsStore } from "@modules/API/ViewPage";
+import { useGenerateStore } from "@modules/GenerateStore";
 import { useSearchStore } from "@modules/SearchStore";
 import { useQueryParameter } from "@modules/Util/Query";
+import { pick } from "lodash";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import ReactMarkdown from 'react-markdown'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ViewRoute() {
     const title = useQueryParameter("title", "");
     const [isViewingRelated, setIsViewingRelated] = useState(false);
     const [isEditingTitle, setIsEditingTitle] = useState(false);
-    
+    const generateStore = useGenerateStore();
+    const navigate = useNavigate();
+
     const { state, text } = useViewPageResultsStore();
-    const { actions: searchActions, value: { category, format, term, length } } = useSearchStore();
+    const { actions: searchActions, value: { term, ...metadata } } = useSearchStore();
 
     const returnToSearch = () => {
         if(!term) searchActions.reset();
     }
+
+    const returnToGenerate = () => {
+        generateStore.actions.set("title", title);
+        const m = pick(metadata, ["format", "category", "summary"]);
+        for(const key in m) {
+            const v = m[key as keyof typeof m]!;
+            if(v.length > 0) generateStore.actions.set(key as any, v);
+        }
+        navigate("/generate");
+    }
     
-    const makeRequest = useViewPageRequest({ title, category, format, length });
+    const makeRequest = useViewPageRequest({ title, ...metadata });
     const regenerate = useCallback(() => {
         setIsViewingRelated(false);
         return makeRequest()
@@ -41,7 +55,7 @@ export default function ViewRoute() {
             <h1 class={`text-3xl font-medium mb-6`} contentEditable={isEditingTitle}>{title}</h1>
             <ViewMetadata/>
             {
-                text.length > 0 && <div class="prose lg:prose-lg p-4 rounded-lg bg-gray-300 bg-opacity-50 mt-6">
+                text.length > 0 && <div class="prose lg:prose-lg p-4 rounded-lg bg-gray-300 bg-opacity-50 mt-6 w-full">
                     <ReactMarkdown children={text} />
                 </div>
             }
@@ -64,11 +78,20 @@ export default function ViewRoute() {
                         <FontAwesomeIcon icon={solid("magnifying-glass")} className="pr-2" />
                         Find Related Texts
                     </StyledButton>
+
+                    <StyledButton
+                        style="Green"
+                        class="animate-in fade-in duration-500"
+                        onClick={returnToGenerate}
+                    >
+                        <FontAwesomeIcon icon={solid("pen-to-square")} className="pr-2" />
+                        Edit
+                    </StyledButton>
                 </div>
             }
             {
                 isViewingRelated && <div class="w-full mt-8">
-                    <RelatedTexts req={{ title, category, format, length }}/>
+                    <RelatedTexts req={{ title, ...metadata }}/>
                 </div>
             }
         </div>
