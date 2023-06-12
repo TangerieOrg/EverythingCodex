@@ -42,6 +42,7 @@
     "nodemonConfig": {
         "watch": [
             "src"
+            
         ],
         "exec": "npm start",
         "ext": "ts,js"
