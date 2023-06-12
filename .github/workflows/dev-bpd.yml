@@ -2,25 +2,25 @@ name: Production Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
   workflow_dispatch:
 
 jobs:
   build-api:
     uses: TangerieOrg/Workflows/.github/workflows/docker-build-push.yml@main
     with:
-      image_name: everything-codex-api
+      image_name: dev-everything-codex-api
       registry_name: docker.tangerie.xyz
-      ref: main
+      ref: dev
       path: api
     secrets: inherit
 
   build-frontend:
       uses: TangerieOrg/Workflows/.github/workflows/docker-build-push.yml@main
       with:
-        image_name: everything-codex-frontend
+        image_name: dev-everything-codex-frontend
         registry_name: docker.tangerie.xyz
-        ref: main
+        ref: dev
         path: frontend
       secrets: inherit
     
@@ -30,7 +30,7 @@ jobs:
       - build-api
       - build-frontend
     with:
-      image_name: everything-codex
+      image_name: dev-everything-codex
       registry_name: docker.tangerie.xyz
-      
+      compose_file_path: docker-compose.dev.yml
     secrets: inherit
