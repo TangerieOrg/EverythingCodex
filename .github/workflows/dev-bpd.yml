@@ -13,6 +13,7 @@ jobs:
       registry_name: docker.tangerie.xyz
       ref: dev
       path: api
+      force_build: 'true'
     secrets: inherit
 
   build-frontend:
@@ -22,6 +23,7 @@ jobs:
         registry_name: docker.tangerie.xyz
         ref: dev
         path: frontend
+        force_build: 'true'
       secrets: inherit
     
   deploy:
