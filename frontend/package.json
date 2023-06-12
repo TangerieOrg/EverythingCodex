@@ -50,6 +50,7 @@
     "parcel-resolver-tspaths": "^0.0.9",
     "postcss": "^8.4.16",
     "preact": "^10.11.0",
+    "react-if": "^4.1.4",
     "react-inlinesvg": "^3.0.1",
     "react-json-pretty": "^2.2.0",
     "react-markdown": "^8.0.7",

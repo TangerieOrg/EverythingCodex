@@ -1,5 +1,6 @@
 import RelatedTexts from "@components/RelatedTexts";
 import StyledButton from "@components/StyledButton";
+import ViewMetadata from "@components/View/ViewMetadata";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useViewPageRequest, useViewPageResultsStore } from "@modules/API/ViewPage";
@@ -12,6 +13,8 @@ import { Link } from "react-router-dom";
 export default function ViewRoute() {
     const title = useQueryParameter("title", "");
     const [isViewingRelated, setIsViewingRelated] = useState(false);
+    const [isEditingTitle, setIsEditingTitle] = useState(false);
+    
     const { state, text } = useViewPageResultsStore();
     const { actions: searchActions, value: { category, format, term, length } } = useSearchStore();
 
@@ -35,25 +38,8 @@ export default function ViewRoute() {
                 <FontAwesomeIcon icon={solid("arrow-left")} className="pr-2 group-hover:-translate-x-0.5 transition" />
                 Return to Search
             </Link>
-            <h1 class="text-3xl font-medium mb-6">{title}</h1>
-            {
-                category && <div class="my-2">
-                    <h1 class="font-bold mr-2 inline">Category</h1>
-                    <span class="inline">{category}</span>
-                </div>
-            }
-            {
-                format && <div class="my-2">
-                    <h1 class="font-bold mr-2 inline">Format</h1>
-                    <span class="inline">{format}</span>
-                </div>
-            }
-            {
-                length && <div class="my-2">
-                    <h1 class="font-bold mr-2 inline">Length</h1>
-                    <span class="inline">{length}</span>
-                </div>
-            }
+            <h1 class={`text-3xl font-medium mb-6`} contentEditable={isEditingTitle}>{title}</h1>
+            <ViewMetadata/>
             {
                 text.length > 0 && <div class="prose lg:prose-lg p-4 rounded-lg bg-gray-300 bg-opacity-50 mt-6">
                     <ReactMarkdown children={text} />

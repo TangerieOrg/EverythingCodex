@@ -41,7 +41,7 @@ export const useRelatedRequest = (req : RelatedRequest) => {
 
         actions.setState("loading");
 
-        fetch(getUrl("/related"), {
+        fetch(getUrl("/gpt/related"), {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

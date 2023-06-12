@@ -51,7 +51,7 @@ export const useViewPageRequest = (req : ViewRequest) => {
         actions.reset();
         actions.setState("loading");
 
-        fetch(getUrl("/view"), {
+        fetch(getUrl("/gpt/view"), {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
