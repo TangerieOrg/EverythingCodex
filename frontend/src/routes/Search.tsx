@@ -7,20 +7,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StyledButton from '@components/StyledButton';
 import { Link, useLocation } from 'react-router-dom';
 import { If, Then } from "react-if";
+import { useSearchStore } from '@modules/SearchStore';
 
 // clock-rotate-left
 
 const mediaQuery = window.matchMedia('(min-width: 768px)')
-console.log(mediaQuery.matches);
+
 
 export default function SearchRoute() {
     const { pathname, search } = useLocation();
     const isSearching = pathname === '/search';
-
+    const searchStore = useSearchStore();
     const { state, actions } = useSearchResultsStore();
 
     useEffect(() => {
         if (isSearching) {
+            searchStore.actions.updateFromUrl();
             actions.reset();
             actions.request();
         }

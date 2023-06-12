@@ -8,6 +8,7 @@ interface SearchStoreActions {
     reset(...keysToKeep : (keyof SearchStoreValue)[]): void;
     set<K extends keyof SearchStoreValue>(key: K, value: SearchStoreValue[K]): void;
     delete<K extends keyof SearchStoreValue>(key: K): void;
+    updateFromUrl() : void;
 }
 
 export interface SearchStore {
@@ -32,6 +33,9 @@ export const [useSearchStore, getSearchStore, searchStoreEmitter] = createImmerS
         }),
         delete: (key) => set(store => {
             delete store.value[key]
+        }),
+        updateFromUrl: () => set(store => {
+            store.value = getValueFromURL();
         })
     }
 }))
