@@ -92,7 +92,7 @@ export default function HistoryRoute() {
                 Return to Search
             </Link>
 
-            <h1 class="text-3xl font-medium mb-6">History</h1>
+            <h1 class="text-3xl font-medium mb-6">History ({history.length})</h1>
             <div class="max-w-2xl mx-auto mt-8 text-lg">
                 {
                     history.map((item, i) => (
