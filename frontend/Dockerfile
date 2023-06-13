@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:18.3.0 AS build
+FROM --platform=$BUILDPLATFORM docker.tangerie.xyz/node-docker AS build
 
 ARG FONT_AWESOME_KEY
 ENV FONT_AWESOME_KEY=$FONT_AWESOME_KEY

@@ -1,4 +1,4 @@
-FROM node:18.3.0
+FROM docker.tangerie.xyz/node-docker
 
 ARG OPENAI_KEY
 ENV OPENAI_KEY=$OPENAI_KEY
