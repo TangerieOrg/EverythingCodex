@@ -1,4 +1,4 @@
-FROM docker.tangerie.xyz/node-docker
+FROM --platform=$BUILDPLATFORM docker.tangerie.xyz/node-docker
 
 ARG OPENAI_KEY
 ENV OPENAI_KEY=$OPENAI_KEY
