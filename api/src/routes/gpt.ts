@@ -1,3 +1,4 @@
+import { isAuthenticatedMiddleware } from "@modules/Auth";
 import { createViewPrompt } from "@modules/Library/prompts";
 import { makeRelatedStream, makeSearchStream } from "@modules/Library/streamed";
 import { createCompletionStream } from "@modules/OpenAI";
@@ -26,7 +27,6 @@ curl -N --location --request POST 'localhost:8080/search' \
 
 GPTRoutes.post('/search', async (req, res) => {
     res.statusCode = 200;
-    
     const { emitter, prompt } = await makeSearchStream(req.body, req.tracking);
 
     const finalResults : string[] = [];

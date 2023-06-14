@@ -3,5 +3,6 @@ declare namespace Express {
         tracking : string;
         redis : ReturnType<typeof import("redis").createClient>;
         userid?: string;
+        isAuthenticated?: boolean;
     }
 }
