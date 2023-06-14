@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { HistoryResponse, RequestInfo } from "./types";
 import { getTS } from "./Util";
-import { omit } from "lodash";
+import { at, omit } from "lodash";
 import { minmax } from "@modules/Util";
 
 const baseUserStr = (req : Request) => `users.${req.tracking}`;
@@ -23,7 +23,26 @@ export const recordToLargeLog = async (req : Request, info : RequestInfo) => {
     );
 } 
 
-export const recordRequest = async (req : Request, result : any) => {
+const recordPrompt = async (req : Request, prompt : string, result : any) => {
+    const startKey = "prompts";
+    const path = `$.${req.path.slice(1)}`;
+    if(!await req.redis.exists(startKey)) {
+        await req.redis.json.set(startKey, ".", {});
+        
+    }
+    
+    if((await req.redis.json.type(startKey, path))?.at(0) == undefined) {
+        await req.redis.json.set(startKey, path, []);
+    }
+
+    await req.redis.json.arrAppend(
+        startKey, 
+        path, 
+        { prompt, result }
+    );
+}
+
+export const recordRequest = async (req : Request, prompt : string, result : any) => {
     const startKey = baseUserStr(req);
     if(!await req.redis.exists(startKey)) {
         await req.redis.json.set(startKey, ".", {
@@ -45,6 +64,7 @@ export const recordRequest = async (req : Request, result : any) => {
     );
 
     await recordToLargeLog(req, info);
+    await recordPrompt(req, prompt, result);
 }
 
 export const getHistory = async (req : Request, offset : number, limit : number) : Promise<HistoryResponse> => {

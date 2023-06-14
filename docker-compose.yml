@@ -1,54 +1,49 @@
 version: '3'
 services:
-    redis:
-        image: redislabs/redismod
-        volumes:
-            - redis-data:/data
-            - redis-conf:/usr/local/etc/redis/redis.conf
-        ports:
-            - 6379:6379
-        deploy:
-            replicas: 1
-    api:
-        image: ${IMAGE_NAME}/api:latest
-        deploy:
-            replicas: 4
-        depends_on:
-            - redis
-    frontend:
-        image: ${IMAGE_NAME}/frontend:latest
-        deploy:
-            replicas: 1
-        depends_on:
-            - api
+  redis:
+    image: redislabs/redismod:latest
+    volumes:
+      - redis-data:/data
+      - redis-conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - 6379:6379
+    deploy:
+      replicas: 1
+  api:
+    image: ${IMAGE_NAME}/api:latest
+    deploy:
+      replicas: 1
+      labels:
+        xyz.tangerie.reverse_proxy.path: "/codex/api"
+        xyz.tangerie.reverse_proxy.port: "80"
+    networks:
+      - default
+      - authenticator-overlay
+      - nginx-proxy-overlay
+    depends_on:
+      - redis
+  frontend:
+    image: ${IMAGE_NAME}/frontend:latest
+    deploy:
+      replicas: 1
+      labels:
+        xyz.tangerie.reverse_proxy.path: "/codex"
+        xyz.tangerie.reverse_proxy.port: "3000"
+    networks:
+      - default
+      - nginx-proxy-overlay
+    depends_on:
+      - api
 
-    # Do our routing here instead
-    nginx:
-        # ports:
-        #     - 8884:80
-        image: nginx:alpine
-        deploy:
-            replicas: 1
-            labels:
-                xyz.tangerie.reverse_proxy.path: "/codex"
-                xyz.tangerie.reverse_proxy.port: "80"
-        networks:
-            - default
-            - nginx-proxy-overlay
-        volumes:
-            - type: bind
-              source: ./nginx/nginx.conf
-              target: /etc/nginx/nginx.conf
-        depends_on:
-            - api
-            - frontend
-    
 volumes:
-    redis-data:
-    redis-conf:
+  redis-data:
+  redis-conf:
 
 networks:
-    default:
-    nginx-proxy-overlay:
-        external: true
-        driver: overlay
+  default:
+  nginx-proxy-overlay:
+    external: true
+    driver: overlay
+  authenticator-overlay:
+    external: true
+    driver: overlay

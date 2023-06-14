@@ -8,7 +8,7 @@ type SearchEventMap = {
     end: []
 }
 
-export const makeSearchStream = async (data : SearchRequest) => {
+export const makeSearchStream = async (data : SearchRequest, user?: string) => {
     const prompt = createSearchPrompt(data);
 
     const gptEmitter = await createCompletionStream({
@@ -19,10 +19,11 @@ export const makeSearchStream = async (data : SearchRequest) => {
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
-        stop: "]"
+        stop: "]",
+        user
     });
 
-    const searchEmitter = new EventEmitter<SearchEventMap>();
+    const emitter = new EventEmitter<SearchEventMap>();
 
     let currentData = `"`;
 
@@ -31,7 +32,7 @@ export const makeSearchStream = async (data : SearchRequest) => {
         const index = currentData.indexOf(",");
         if(index > -1) {
             const [start, end] = currentData.split(",");
-            searchEmitter.emit(
+            emitter.emit(
                 "item", 
                 start.trim().slice(1,-1).trim()
             );
@@ -41,15 +42,15 @@ export const makeSearchStream = async (data : SearchRequest) => {
 
     gptEmitter.on('end', () => {
         // Also send last data in buffer
-        searchEmitter.emit("item", currentData.replace("]", "").trim().slice(1,-1).trim())
-        searchEmitter.emit("end")
+        emitter.emit("item", currentData.replace("]", "").trim().slice(1,-1).trim())
+        emitter.emit("end")
     });
 
-    return searchEmitter;
+    return { emitter, prompt };
 }
 
 
-export const makeRelatedStream = async (data : RelatedRequest) => {
+export const makeRelatedStream = async (data : RelatedRequest, user?: string) => {
     const prompt = createRelatedPrompt(data);
 
     const gptEmitter = await createCompletionStream({
@@ -60,10 +61,11 @@ export const makeRelatedStream = async (data : RelatedRequest) => {
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
-        stop: "]"
+        stop: "]",
+        user
     });
 
-    const searchEmitter = new EventEmitter<SearchEventMap>();
+    const emitter = new EventEmitter<SearchEventMap>();
 
     let currentData = `"`;
 
@@ -72,7 +74,7 @@ export const makeRelatedStream = async (data : RelatedRequest) => {
         const index = currentData.indexOf(",");
         if(index > -1) {
             const [start, end] = currentData.split(",");
-            searchEmitter.emit(
+            emitter.emit(
                 "item", 
                 start.trim().slice(1,-1).trim()
             );
@@ -82,9 +84,9 @@ export const makeRelatedStream = async (data : RelatedRequest) => {
 
     gptEmitter.on('end', () => {
         // Also send last data in buffer
-        searchEmitter.emit("item", currentData.replace("]", "").trim().slice(1,-1).trim())
-        searchEmitter.emit("end")
+        emitter.emit("item", currentData.replace("]", "").trim().slice(1,-1).trim())
+        emitter.emit("end")
     });
 
-    return searchEmitter;
+    return { emitter, prompt };
 }

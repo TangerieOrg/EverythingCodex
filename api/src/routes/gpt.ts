@@ -1,3 +1,4 @@
+import { isAuthenticatedMiddleware } from "@modules/Auth";
 import { createViewPrompt } from "@modules/Library/prompts";
 import { makeRelatedStream, makeSearchStream } from "@modules/Library/streamed";
 import { createCompletionStream } from "@modules/OpenAI";
@@ -26,8 +27,7 @@ curl -N --location --request POST 'localhost:8080/search' \
 
 GPTRoutes.post('/search', async (req, res) => {
     res.statusCode = 200;
-    
-    const emitter = await makeSearchStream(req.body);
+    const { emitter, prompt } = await makeSearchStream(req.body, req.tracking);
 
     const finalResults : string[] = [];
 
@@ -37,7 +37,7 @@ GPTRoutes.post('/search', async (req, res) => {
     });
 
     emitter.on('end', async () => {
-        await recordRequest(req, finalResults);
+        await recordRequest(req, prompt, finalResults);
         res.end();
     });
 })
@@ -53,7 +53,7 @@ curl -N --location --request POST 'localhost:8080/related' \
 GPTRoutes.post('/related', async (req, res) => {
     res.statusCode = 200;
     
-    const emitter = await makeRelatedStream(req.body);
+    const { emitter, prompt } = await makeRelatedStream(req.body, req.tracking);
 
     const finalResults : string[] = [];
 
@@ -63,7 +63,7 @@ GPTRoutes.post('/related', async (req, res) => {
     });
 
     emitter.on('end', async () => {
-        await recordRequest(req, finalResults);
+        await recordRequest(req, prompt, finalResults);
         res.end();
     });
 })
@@ -90,9 +90,10 @@ GPTRoutes.post('/view', async (req, res) => {
         prompt,
         temperature: 0.9,
         max_tokens: 2048,
-        //top_p: 1,
+        top_p: 1,
         frequency_penalty: 0,
-        presence_penalty: 0
+        presence_penalty: 0.5,
+        user: req.tracking
     })
 
     let finalResult = "";
@@ -103,7 +104,7 @@ GPTRoutes.post('/view', async (req, res) => {
     });
 
     emitter.on('end', async () => {
-        await recordRequest(req, finalResult);
+        await recordRequest(req, prompt, finalResult);
         res.end();
     });
 })

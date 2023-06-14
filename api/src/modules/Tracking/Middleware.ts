@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 
 export const TrackingMiddleware = async (req : Request, res : Response, next : NextFunction) => {
     req.tracking = await getCookie(req, res);
-
+    req.userid = req.signedCookies["userid"] as string | undefined;
     next();
 }
 

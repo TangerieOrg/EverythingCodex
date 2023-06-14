@@ -1,19 +1,16 @@
-import express from "express";
-import cors from "cors";
 import dotenv from 'dotenv';
-import router from "./routes";
-import cookieMiddleware from "cookie-parser";
 import path from "path";
-import { TrackingMiddleware } from "@modules/Tracking/Middleware";
-import { DatabaseMiddleware } from "@modules/Database/Middleware";
 
 dotenv.config({
     path: path.join(process.cwd(), process.env.NODE_ENV === 'development' ? ".env.development" : ".env")
 });
 
-// const redis = createClient({
-//     url: process.env.REDIS_URL
-// })
+import express from "express";
+import cors from "cors";
+import router from "./routes";
+import cookieMiddleware from "cookie-parser";
+import { TrackingMiddleware } from "@modules/Tracking/Middleware";
+import { DatabaseMiddleware } from "@modules/Database/Middleware";
 
 const app = express();
 
@@ -40,19 +37,11 @@ app.use((req, res, next) => {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
     res.setHeader("Expires", "0");
 
+    const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
+    const trackingDetails = req.userid ? `USER ${req.userid}` : `TRACK ${req.tracking}`;
+    console.log(`[${ip} - ${trackingDetails}] ${req.url} (${JSON.stringify(req.body)})`);
     next();
 })
-
-const LOG_REQUESTS = true //process.env.NODE_ENV === 'production';
-
-// Logging
-if(LOG_REQUESTS) {
-    app.use((req, res, next) => {
-        const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
-        console.log(`[${ip} - ${req.tracking}] ${req.url} (${JSON.stringify(req.body)})`);
-        next();
-    });
-}
 
 // Routes
 app.use(router);

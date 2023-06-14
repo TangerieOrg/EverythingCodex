@@ -31,35 +31,35 @@ curl -N --location --request POST 'https://tangerie.xyz/codex/api/search' \
 }'
 */
 
-const sleep = (ms : number) => {
+const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 const EXAMPLE_SEARCH_RESULTS = [
-"Joe Biden: The Life and Career of the 47th President of the United States",
-"Joe Biden: An American Journey",
-"Joe Biden: The Path to the White House",
-"Joe Biden: A Biography",
-"Joe Biden: A Political Biography",
-"Joe Biden: The Life and Career of the 47th President of the United States",
-"Joe Biden: An American Journey",
-"Joe Biden: The Path to the White House",
-"Joe Biden: A Biography",
-"Joe Biden: A Political Biography"
+    "Joe Biden: The Life and Career of the 47th President of the United States",
+    "Joe Biden: An American Journey",
+    "Joe Biden: The Path to the White House",
+    "Joe Biden: A Biography",
+    "Joe Biden: A Political Biography",
+    "Joe Biden: The Life and Career of the 47th President of the United States",
+    "Joe Biden: An American Journey",
+    "Joe Biden: The Path to the White House",
+    "Joe Biden: A Biography",
+    "Joe Biden: A Political Biography"
 ]
 
 FakeGPTRoutes.post('/search', async (req, res) => {
     res.statusCode = 200;
-    
-    const finalResults : string[] = [];
 
-    for(const item of EXAMPLE_SEARCH_RESULTS) {
+    const finalResults: string[] = [];
+
+    for (const item of EXAMPLE_SEARCH_RESULTS) {
         await sleep(100);
         res.write(item + '\n')
         finalResults.push(item);
     }
 
-    await recordRequest(req, finalResults);
+    await recordRequest(req, "", finalResults);
 
     res.end();
 })
@@ -84,16 +84,16 @@ const EXAMPLE_RELATED_RESULTS = [
 FakeGPTRoutes.post('/related', async (req, res) => {
     res.statusCode = 200;
 
-    const finalResults : string[] = [];
+    const finalResults: string[] = [];
 
-    for(const item of EXAMPLE_RELATED_RESULTS) {
+    for (const item of EXAMPLE_RELATED_RESULTS) {
         await sleep(10);
         res.write(item + '\n');
         finalResults.push(item);
     }
 
-    await recordRequest(req, finalResults);
-    
+    await recordRequest(req, "", finalResults);
+
     res.end();
 })
 
@@ -117,7 +117,7 @@ The race for the White House was a grueling one. Biden had to battle through a c
 On November 3rd, 2020, Joe Biden was declared the President-elect. He had won the election with a clear
 `
 
-function randomInteger(min : number, max : number) {
+function randomInteger(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -127,7 +127,7 @@ FakeGPTRoutes.post('/view', async (req, res) => {
     let finalResult = ""
 
     let i = 0;
-    while(i < EXAMPLE_VIEW_PAGE.length) {
+    while (i < EXAMPLE_VIEW_PAGE.length) {
         await sleep(10)
         const l = randomInteger(15, 25);
         const toSend = EXAMPLE_VIEW_PAGE.slice(
@@ -135,9 +135,9 @@ FakeGPTRoutes.post('/view', async (req, res) => {
         );
         res.write(toSend);
         finalResult += toSend;
-        i+=l;
+        i += l;
     }
-    await recordRequest(req, finalResult);
+    await recordRequest(req, "", finalResult);
     res.end();
 })
 
