@@ -3,6 +3,8 @@ import TestRoutes from "./test";
 import GPTRoutes from "./gpt";
 import FakeGPTRoutes from "./fake";
 import UserRoutes from "./user";
+import { Request, Response, NextFunction } from "express";
+import AuthenticatedRoutes from "./authenticated";
 
 const router = express.Router();
 
@@ -14,6 +16,7 @@ const routers : Record<string, express.Router> = {
     '/gpt': GPTRoutes,
     '/fake': FakeGPTRoutes,
     '/user': UserRoutes,
+    '/authenticated': AuthenticatedRoutes,
 };
 
 if(process.env.NODE_ENV === "development") {
@@ -23,5 +26,13 @@ if(process.env.NODE_ENV === "development") {
 for(const key of Object.keys(routers)) {
     router.use(key, routers[key])
 }
+
+router.use((err : any, req : Request, res : Response, next : NextFunction) => {
+    if(!res.headersSent) {
+        console.log(`[ERR] '${err.message}'`);
+        res.status(400);
+        res.json({ error: err.message });
+    }
+})
 
 export default router;
